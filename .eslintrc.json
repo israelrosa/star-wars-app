@@ -25,11 +25,13 @@
     "rules": {
       "import/no-duplicates": "off",
       "@typescript-eslint/camelcase": "off",
+      "camelcase": "off",
       "prettier/prettier": "error",
       "no-unused-expressions": "off",
       "no-use-before-define": "off",
       "spaced-comment": "off",
       "react/prop-types": "off",
+      "global-require": "off",
       "react/style-prop-object": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "react/jsx-props-no-spreading": "off",
