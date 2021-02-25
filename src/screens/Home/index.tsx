@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
   StyleSheet,
@@ -6,9 +7,10 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import SearchInput from '../../components/SearchInput';
-import Logo from '../../svgs/logo';
-import { theme, sizes } from '../../theme';
+import Header from '../../components/Header';
+import Sessions from '../../components/Sessions';
+import SquareCard from '../../components/SquareCard';
+import { sizes, theme } from '../../theme';
 
 const Home: React.FC = () => {
   return (
@@ -18,22 +20,42 @@ const Home: React.FC = () => {
         style={styles.charactersBackground}
         imageStyle={{ height: '100%' }}
       >
-        <Logo style={{ marginTop: (StatusBar.currentHeight as number) + 20 }} />
-        <View
-          style={{
-            paddingHorizontal: sizes.margin,
-            width: '100%',
-            marginTop: 20,
-          }}
-        >
-          <SearchInput />
+        <Header />
+        <View style={styles.sessions}>
+          <Sessions title="Characters">
+            <Ionicons name="person-outline" color={theme.primary} size={30} />
+          </Sessions>
+          <SquareCard
+            title="Anakin"
+            type={{
+              type: 'character',
+              birthday: '19BBY',
+              gender: 'male',
+              specie: 'human',
+            }}
+          />
         </View>
       </ImageBackground>
       <ImageBackground
         source={require('../../../assets/images/planetshome.jpg')}
         style={styles.planetsBackground}
         imageStyle={{ height: '100%' }}
-      />
+      >
+        <View style={styles.sessions}>
+          <Sessions title="Planets">
+            <Ionicons name="planet-outline" color={theme.primary} size={30} />
+          </Sessions>
+          <SquareCard
+            title="Tatooine"
+            type={{
+              type: 'planet',
+              characters: 4,
+              climate: 'rainy',
+              population: '1000',
+            }}
+          />
+        </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -50,12 +72,21 @@ const styles = StyleSheet.create({
       (StatusBar.currentHeight as number) +
       80,
     width: '100%',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 
   planetsBackground: {
     flex: 1,
+    minHeight: 280,
     alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+
+  sessions: {
+    width: '100%',
+    marginBottom: 20,
+    paddingHorizontal: sizes.margin,
   },
 });
 
