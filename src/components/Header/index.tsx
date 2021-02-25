@@ -1,19 +1,35 @@
 import React from 'react';
-import { StatusBar, View } from 'react-native';
+import { StatusBar, Text, View } from 'react-native';
 import Logo from '../../svgs/logo';
-import { sizes } from '../../theme';
+import { fonts, sizes, theme } from '../../theme';
 import SearchInput from '../SearchInput';
 
-const Header: React.FC = () => {
+interface Props {
+  title?: string;
+}
+
+const Header: React.FC<Props> = ({ title }) => {
   return (
     <View
       style={{
         alignItems: 'center',
-        marginTop: (StatusBar.currentHeight as number) + 20,
         paddingHorizontal: sizes.margin,
+        position: 'absolute',
+        zIndex: 2,
+        width: '100%',
+        top: (StatusBar.currentHeight as number) + 20,
       }}
     >
-      <Logo />
+      {title ? (
+        <Text
+          style={{ fontFamily: fonts.sw, fontSize: 24, color: theme.primary }}
+        >
+          {title}
+        </Text>
+      ) : (
+        <Logo />
+      )}
+
       <View
         style={{
           width: '100%',

@@ -7,32 +7,64 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import Header from '../../components/Header';
 import Sessions from '../../components/Sessions';
-import SquareCard from '../../components/SquareCard';
-import { sizes, theme } from '../../theme';
+import SquareCard, { Character, Planets } from '../../components/SquareCard';
+import { theme } from '../../theme';
 
 const Home: React.FC = () => {
   return (
     <View style={styles.container}>
+      <Header />
       <ImageBackground
         source={require('../../../assets/images/characters.jpg')}
         style={styles.charactersBackground}
         imageStyle={{ height: '100%' }}
       >
-        <Header />
         <View style={styles.sessions}>
           <Sessions title="Characters">
-            <Ionicons name="person-outline" color={theme.primary} size={30} />
+            <Ionicons
+              name="person-outline"
+              color={theme.primary}
+              size={30}
+              style={{ marginRight: 10 }}
+            />
           </Sessions>
-          <SquareCard
-            title="Anakin"
-            type={{
-              type: 'character',
-              birthday: '19BBY',
-              gender: 'male',
-              specie: 'human',
-            }}
+          <FlatList
+            horizontal
+            overScrollMode="always"
+            data={
+              [
+                {
+                  title: 'Anakin',
+                  type: 'character',
+                  birthday: '19BBY',
+                  gender: 'male',
+                  specie: 'human',
+                },
+
+                {
+                  title: 'Ahsoka',
+                  type: 'character',
+                  birthday: '19BBY',
+                  gender: 'male',
+                  specie: 'human',
+                },
+              ] as Character[]
+            }
+            renderItem={({ item }) => (
+              <SquareCard
+                type={{
+                  title: item.title,
+                  type: item.type,
+                  birthday: item.birthday,
+                  gender: item.gender,
+                  specie: item.specie,
+                }}
+              />
+            )}
+            keyExtractor={(item) => item.title}
           />
         </View>
       </ImageBackground>
@@ -43,16 +75,39 @@ const Home: React.FC = () => {
       >
         <View style={styles.sessions}>
           <Sessions title="Planets">
-            <Ionicons name="planet-outline" color={theme.primary} size={30} />
+            <Ionicons
+              name="planet-outline"
+              color={theme.primary}
+              size={30}
+              style={{ marginRight: 10 }}
+            />
           </Sessions>
-          <SquareCard
-            title="Tatooine"
-            type={{
-              type: 'planet',
-              characters: 4,
-              climate: 'rainy',
-              population: '1000',
-            }}
+          <FlatList
+            horizontal
+            overScrollMode="always"
+            data={
+              [
+                {
+                  title: 'Tatooine',
+                  characters: 4,
+                  climate: 'Rainy',
+                  population: '1000',
+                  type: 'planet',
+                },
+              ] as Planets[]
+            }
+            renderItem={({ item }) => (
+              <SquareCard
+                type={{
+                  title: item.title,
+                  type: item.type,
+                  climate: item.climate,
+                  population: item.population,
+                  characters: item.characters,
+                }}
+              />
+            )}
+            keyExtractor={(item) => item.title}
           />
         </View>
       </ImageBackground>
@@ -63,6 +118,7 @@ const Home: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
     backgroundColor: theme.black,
   },
 
@@ -72,7 +128,7 @@ const styles = StyleSheet.create({
       (StatusBar.currentHeight as number) +
       80,
     width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
 
@@ -86,7 +142,6 @@ const styles = StyleSheet.create({
   sessions: {
     width: '100%',
     marginBottom: 20,
-    paddingHorizontal: sizes.margin,
   },
 });
 

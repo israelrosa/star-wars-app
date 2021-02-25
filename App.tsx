@@ -4,6 +4,7 @@ import { Oswald_400Regular } from '@expo-google-fonts/oswald';
 import { Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
+import List from './src/screens/List';
 import Home from './src/screens/Home';
 
 const App: React.FC = () => {
@@ -19,7 +20,7 @@ const App: React.FC = () => {
     <>
       {loaded && (
         <>
-          <Home />
+          <List />
           <StatusBar style="light" translucent />
         </>
       )}

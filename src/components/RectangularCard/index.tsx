@@ -1,4 +1,4 @@
-import { Ionicons, Fontisto } from '@expo/vector-icons';
+import { Fontisto, Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { fonts, theme } from '../../theme';
@@ -9,6 +9,9 @@ export interface Character {
   specie: string;
   gender: string;
   birthday: string;
+  weight: string;
+  height: string;
+  homeworld: string;
 }
 
 export interface Planets {
@@ -17,6 +20,9 @@ export interface Planets {
   population: string;
   characters: number;
   climate: string;
+  rotationPeriod: string;
+  diameter: string;
+  water: string;
 }
 
 export interface CardProps {
@@ -25,7 +31,7 @@ export interface CardProps {
 
 const iconSize = 20;
 
-const SquareCard: React.FC<CardProps> = ({ type }) => {
+const RectangularCard: React.FC<CardProps> = ({ type }) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleBar}>
@@ -40,7 +46,7 @@ const SquareCard: React.FC<CardProps> = ({ type }) => {
       </View>
       <View style={styles.content}>
         {type.type === 'character' && (
-          <>
+          <View style={styles.detailsContainer}>
             <View style={styles.details}>
               <Fontisto name="dna" size={iconSize} color={theme.primary} />
               <Text style={styles.detailsText}>{type.specie}</Text>
@@ -61,10 +67,10 @@ const SquareCard: React.FC<CardProps> = ({ type }) => {
               />
               <Text style={styles.detailsText}>{type.birthday}</Text>
             </View>
-          </>
+          </View>
         )}
         {type.type === 'planet' && (
-          <>
+          <View style={styles.detailsContainer}>
             <View style={styles.details}>
               <Ionicons
                 name="people-outline"
@@ -89,7 +95,7 @@ const SquareCard: React.FC<CardProps> = ({ type }) => {
               />
               <Text style={styles.detailsText}>{type.climate}</Text>
             </View>
-          </>
+          </View>
         )}
       </View>
     </View>
@@ -99,11 +105,10 @@ const SquareCard: React.FC<CardProps> = ({ type }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.cardBackground,
-    minWidth: 150,
-    maxWidth: 170,
+    marginBottom: 5,
+    height: 190,
     borderRadius: 20,
     opacity: 0.8,
-    marginLeft: 5,
   },
 
   titleBar: {
@@ -116,7 +121,11 @@ const styles = StyleSheet.create({
   content: {
     marginVertical: 10,
     marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
+
+  detailsContainer: {},
 
   details: {
     flexDirection: 'row',
@@ -131,5 +140,4 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
-
-export default SquareCard;
+export default RectangularCard;

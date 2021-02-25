@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    marginLeft: 15,
+    marginHorizontal: 15,
     fontFamily: fonts.osw,
   },
 });
