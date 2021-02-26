@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,10 +10,38 @@ import {
 import { FlatList } from 'react-native-gesture-handler';
 import Header from '../../components/Header';
 import Sessions from '../../components/Sessions';
-import SquareCard, { Character, Planets } from '../../components/SquareCard';
+import SquareCard from '../../components/SquareCard';
+import Characters from '../../interfaces/Characters';
+import Planets from '../../interfaces/Planets';
+import api from '../../services/api';
 import { theme } from '../../theme';
 
+interface ResponsePlanets {
+  results: Planets[];
+}
+
+interface ResponseCharacters {
+  results: Characters[];
+}
+
 const Home: React.FC = () => {
+  const [planets, setPlanets] = useState<Planets[]>();
+  const [characters, setCharacters] = useState<Characters[]>();
+
+  useEffect(() => {
+    Promise.all([
+      api.get<ResponseCharacters>('people'),
+      api.get<ResponsePlanets>('planets'),
+    ])
+      .then((values) => {
+        setCharacters(values[0].data.results);
+        setPlanets(values[1].data.results);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+
   return (
     <View style={styles.container}>
       <Header />
@@ -34,37 +62,19 @@ const Home: React.FC = () => {
           <FlatList
             horizontal
             overScrollMode="always"
-            data={
-              [
-                {
-                  title: 'Anakin',
-                  type: 'character',
-                  birthday: '19BBY',
-                  gender: 'male',
-                  specie: 'human',
-                },
-
-                {
-                  title: 'Ahsoka',
-                  type: 'character',
-                  birthday: '19BBY',
-                  gender: 'male',
-                  specie: 'human',
-                },
-              ] as Character[]
-            }
+            data={characters}
             renderItem={({ item }) => (
               <SquareCard
                 type={{
-                  title: item.title,
-                  type: item.type,
-                  birthday: item.birthday,
+                  title: item.name,
+                  type: 'character',
+                  birthday: item.birth_year,
                   gender: item.gender,
-                  specie: item.specie,
+                  height: item.height,
                 }}
               />
             )}
-            keyExtractor={(item) => item.title}
+            keyExtractor={(item) => item.name}
           />
         </View>
       </ImageBackground>
@@ -85,29 +95,19 @@ const Home: React.FC = () => {
           <FlatList
             horizontal
             overScrollMode="always"
-            data={
-              [
-                {
-                  title: 'Tatooine',
-                  characters: 4,
-                  climate: 'Rainy',
-                  population: '1000',
-                  type: 'planet',
-                },
-              ] as Planets[]
-            }
+            data={planets}
             renderItem={({ item }) => (
               <SquareCard
                 type={{
-                  title: item.title,
-                  type: item.type,
+                  title: item.name,
+                  type: 'planet',
                   climate: item.climate,
                   population: item.population,
-                  characters: item.characters,
+                  characters: item.residents.length,
                 }}
               />
             )}
-            keyExtractor={(item) => item.title}
+            keyExtractor={(item) => item.name}
           />
         </View>
       </ImageBackground>

@@ -1,17 +1,18 @@
-import { Ionicons, Fontisto } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import api from '../../services/api';
 import { fonts, theme } from '../../theme';
 
-export interface Character {
+interface Character {
   title: string;
   type: 'character';
-  specie: string;
+  height: string;
   gender: string;
   birthday: string;
 }
 
-export interface Planets {
+interface Planets {
   title: string;
   type: 'planet';
   population: string;
@@ -42,8 +43,12 @@ const SquareCard: React.FC<CardProps> = ({ type }) => {
         {type.type === 'character' && (
           <>
             <View style={styles.details}>
-              <Fontisto name="dna" size={iconSize} color={theme.primary} />
-              <Text style={styles.detailsText}>{type.specie}</Text>
+              <Ionicons
+                name="code-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{type.height}</Text>
             </View>
             <View style={styles.details}>
               <Ionicons
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.cardBackground,
     minWidth: 150,
-    maxWidth: 170,
+    maxWidth: 200,
     borderRadius: 20,
     opacity: 0.8,
     marginLeft: 5,

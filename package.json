@@ -13,6 +13,7 @@
     "@expo-google-fonts/oswald": "^0.1.0",
     "@expo-google-fonts/poppins": "^0.1.0",
     "@expo/vector-icons": "^12.0.0",
+    "axios": "^0.21.1",
     "expo": "~40.0.0",
     "expo-blur": "~8.2.2",
     "expo-font": "~8.4.0",

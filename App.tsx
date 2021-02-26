@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import List from './src/screens/List';
 import Details from './src/screens/Details';
+import Home from './src/screens/Home';
 // import Home from './src/screens/Home';
 
 const App: React.FC = () => {
@@ -21,7 +22,7 @@ const App: React.FC = () => {
     <>
       {loaded && (
         <>
-          <Details />
+          <Home />
           <StatusBar style="light" translucent />
         </>
       )}
