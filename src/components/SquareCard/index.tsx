@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import api from '../../services/api';
 import { fonts, theme } from '../../theme';
 
 interface Character {
@@ -47,6 +46,7 @@ const SquareCard: React.FC<CardProps> = ({ type }) => {
                 name="code-outline"
                 size={iconSize}
                 color={theme.primary}
+                style={{ transform: [{ rotateZ: '90deg' }] }}
               />
               <Text style={styles.detailsText}>{type.height}</Text>
             </View>
