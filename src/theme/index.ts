@@ -7,6 +7,7 @@ const theme = {
   searchIconBar: '#232323',
   searchIcon: '#3D3D3D',
   searchLine: '#1B1B1B',
+  decorators: '#8BB2FF',
 };
 
 const sizes = {

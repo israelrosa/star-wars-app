@@ -6,9 +6,10 @@ import SearchInput from '../SearchInput';
 
 interface Props {
   title?: string;
+  disableSearch?: boolean;
 }
 
-const Header: React.FC<Props> = ({ title }) => {
+const Header: React.FC<Props> = ({ title, disableSearch }) => {
   return (
     <View
       style={{
@@ -36,7 +37,7 @@ const Header: React.FC<Props> = ({ title }) => {
           marginTop: 20,
         }}
       />
-      <SearchInput />
+      <SearchInput style={{ display: disableSearch ? 'none' : 'flex' }} />
     </View>
   );
 };

@@ -46,7 +46,7 @@ const RectangularCard: React.FC<CardProps> = ({ type }) => {
       </View>
       <View style={styles.content}>
         {type.type === 'character' && (
-          <View style={styles.detailsContainer}>
+          <View>
             <View style={styles.details}>
               <Fontisto name="dna" size={iconSize} color={theme.primary} />
               <Text style={styles.detailsText}>{type.specie}</Text>
@@ -70,7 +70,7 @@ const RectangularCard: React.FC<CardProps> = ({ type }) => {
           </View>
         )}
         {type.type === 'planet' && (
-          <View style={styles.detailsContainer}>
+          <View>
             <View style={styles.details}>
               <Ionicons
                 name="people-outline"
@@ -124,8 +124,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-
-  detailsContainer: {},
 
   details: {
     flexDirection: 'row',
