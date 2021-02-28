@@ -43,7 +43,7 @@ const Home: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
+      <Header disableSearch />
       <ImageBackground
         source={require('../../../assets/images/characters.jpg')}
         style={styles.charactersBackground}

@@ -1,5 +1,5 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -23,15 +23,18 @@ type RootParams = {
 type RouteParams = RouteProp<RootParams, 'List'>;
 
 type ResponsePlanets = {
+  next: string;
   results: Planets[];
 };
 
 type ResponseCharacters = {
+  next: string;
   results: Characters[];
 };
 
 const List: React.FC = () => {
   const [data, setData] = useState<Planets[] | Characters[]>();
+  const [nextPage, setNextPage] = useState('');
   const navigator = useNavigation();
   const router = useRoute<RouteParams>();
 
@@ -54,12 +57,32 @@ const List: React.FC = () => {
         if (router.params.url === 'people') {
           const result = await api.get<ResponseCharacters>(router.params.url);
           setData(result.data.results);
+          setNextPage(result.data.next);
         } else {
           const result = await api.get<ResponsePlanets>(router.params.url);
           setData(result.data.results);
+          setNextPage(result.data.next);
         }
       })();
   }, [router.params, router.params.url, MountedRef]);
+
+  const LoadNextPage = (): void => {
+    router.params &&
+      nextPage &&
+      (async () => {
+        if (router.params.url === 'people') {
+          const result = await api.get<ResponseCharacters>(nextPage);
+          const previousData = data?.slice() as Characters[];
+          setData(previousData.concat(result.data.results));
+          setNextPage(result.data.next);
+        } else {
+          const result = await api.get<ResponsePlanets>(nextPage);
+          const previousData = data?.slice() as Planets[];
+          setData(previousData.concat(result.data.results));
+          setNextPage(result.data.next);
+        }
+      })();
+  };
   return (
     <View style={styles.container}>
       <Header
@@ -138,6 +161,8 @@ const List: React.FC = () => {
               )}
               keyExtractor={(item) => item.name}
               style={{ marginHorizontal: 5 }}
+              onEndReached={() => LoadNextPage()}
+              onEndReachedThreshold={0.6}
             />
           )}
           {router.params?.url === 'planets' && (
@@ -194,6 +219,8 @@ const List: React.FC = () => {
                   }
                 />
               )}
+              onEndReached={() => LoadNextPage()}
+              onEndReachedThreshold={0.6}
               keyExtractor={(item) => item.name}
               style={{ marginHorizontal: 5 }}
             />

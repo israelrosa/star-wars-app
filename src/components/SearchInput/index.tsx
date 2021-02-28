@@ -4,7 +4,7 @@ import { RectButton, TextInput } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { fonts, theme } from '../../theme';
 
-const SearchInput: React.FC<TextInputProps> = ({ style }) => {
+const SearchInput: React.FC<TextInputProps> = ({ style, ...rest }) => {
   return (
     <View style={[styles.container, style]}>
       <RectButton style={styles.button}>
@@ -14,6 +14,7 @@ const SearchInput: React.FC<TextInputProps> = ({ style }) => {
         style={styles.input}
         placeholder="Your search here."
         placeholderTextColor="#555555"
+        {...rest}
       />
     </View>
   );

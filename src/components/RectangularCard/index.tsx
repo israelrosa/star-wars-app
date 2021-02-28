@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { fonts, theme } from '../../theme';
 
@@ -218,4 +218,4 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
-export default RectangularCard;
+export default memo(RectangularCard);
