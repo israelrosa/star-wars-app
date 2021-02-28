@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
 import Header from '../../components/Header';
 import Sessions from '../../components/Sessions';
 import SquareCard from '../../components/SquareCard';
@@ -28,7 +29,6 @@ interface ResponseCharacters {
 const Home: React.FC = () => {
   const [planets, setPlanets] = useState<Planets[]>();
   const [characters, setCharacters] = useState<Characters[]>();
-
   const navigator = useNavigation();
 
   useEffect(() => {

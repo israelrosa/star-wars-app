@@ -9,14 +9,17 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
 import DetailCard from '../../components/DetailCard';
 import DetailContent from '../../components/DetailContent';
 import Header from '../../components/Header';
 import api from '../../services/api';
+import { AddCharacterHistoryAction } from '../../store/actions/characterHistoryActions';
+import { AddPlanetHistoryAction } from '../../store/actions/planetHistoryActions';
 import { fonts, theme } from '../../theme';
 
 type RootParams = {
-  Detail: { url: string; type: string };
+  Detail: { url: string; type: 'planet' | 'character' };
 };
 
 type RouterParams = RouteProp<RootParams, 'Detail'>;
@@ -59,14 +62,21 @@ const Details: React.FC = () => {
   } as Details);
   const navigator = useNavigation();
   const router = useRoute<RouterParams>();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     router.params &&
       (async () => {
         const result = await api.get(router.params.url);
         setDetail(result.data);
+
+        dispatch(
+          router.params.type === 'character'
+            ? AddCharacterHistoryAction(result.data)
+            : AddPlanetHistoryAction(result.data),
+        );
       })();
-  }, [router.params, router.params.url]);
+  }, [router.params, router.params.url, dispatch]);
   return (
     <View style={styles.container}>
       <Header

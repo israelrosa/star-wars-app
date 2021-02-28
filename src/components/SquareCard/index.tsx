@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import { StyleSheet, Text, View } from 'react-native';
+import { GestureResponderEvent, StyleSheet, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { fonts, theme } from '../../theme';
 
 interface Character {

@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
 import Header from '../../components/Header';
 import RectangularCard from '../../components/RectangularCard';
 import Sessions from '../../components/Sessions';
@@ -15,6 +16,8 @@ import SquareCard from '../../components/SquareCard';
 import Characters from '../../interfaces/Characters';
 import Planets from '../../interfaces/Planets';
 import api from '../../services/api';
+import { CharacterHistoryState } from '../../store/types/characterTypes';
+import { PlanetHistoryState } from '../../store/types/planetTypes';
 import { theme } from '../../theme';
 
 type RootParams = {
@@ -32,12 +35,21 @@ type ResponseCharacters = {
   results: Characters[];
 };
 
+type CharacterSelector = { characters: CharacterHistoryState };
+type PlanetsSelector = { planets: PlanetHistoryState };
+
 const List: React.FC = () => {
   const [data, setData] = useState<Planets[] | Characters[]>();
   const [recents, setRecents] = useState(true);
   const [nextPage, setNextPage] = useState('');
   const navigator = useNavigation();
   const router = useRoute<RouteParams>();
+  const planetSelector = useSelector<PlanetsSelector, Planets[]>(
+    ({ planets }) => planets.planets,
+  );
+  const characterSelector = useSelector<CharacterSelector, Characters[]>(
+    ({ characters }) => characters.characters,
+  );
 
   function useIsMountedRef(): React.MutableRefObject<boolean> {
     const isMountedRef = useRef(true);
@@ -139,13 +151,13 @@ const List: React.FC = () => {
               overScrollMode="always"
               ListHeaderComponent={() => (
                 <>
-                  {recents && (
+                  {recents && characterSelector.length > 0 && (
                     <>
                       <Sessions title="Recents" />
                       <FlatList
                         horizontal
                         overScrollMode="always"
-                        data={data as Characters[]}
+                        data={characterSelector}
                         renderItem={({ item }) => (
                           <SquareCard
                             type={{
@@ -207,7 +219,7 @@ const List: React.FC = () => {
                   <FlatList
                     horizontal
                     overScrollMode="always"
-                    data={data as Planets[]}
+                    data={planetSelector}
                     renderItem={({ item }) => (
                       <SquareCard
                         type={{

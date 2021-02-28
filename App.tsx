@@ -5,7 +5,9 @@ import { Oswald_400Regular } from '@expo-google-fonts/oswald';
 import { Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
+import { Provider } from 'react-redux';
 import Routes from './src/routes';
+import store from './src/store';
 
 const App: React.FC = () => {
   const [loaded] = useFonts({
@@ -17,14 +19,10 @@ const App: React.FC = () => {
   });
 
   return (
-    <>
-      {loaded && (
-        <>
-          <Routes />
-          <StatusBar style="light" translucent />
-        </>
-      )}
-    </>
+    <Provider store={store}>
+      {loaded && <Routes />}
+      <StatusBar style="light" translucent />
+    </Provider>
   );
 };
 
