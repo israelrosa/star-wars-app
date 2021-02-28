@@ -34,6 +34,7 @@ type ResponseCharacters = {
 
 const List: React.FC = () => {
   const [data, setData] = useState<Planets[] | Characters[]>();
+  const [recents, setRecents] = useState(true);
   const [nextPage, setNextPage] = useState('');
   const navigator = useNavigation();
   const router = useRoute<RouteParams>();
@@ -50,21 +51,48 @@ const List: React.FC = () => {
   }
   const MountedRef = useIsMountedRef();
 
+  const ApiLoad = useCallback(async () => {
+    if (router.params.url === 'people') {
+      const result = await api.get<ResponseCharacters>(router.params.url);
+      setData(result.data.results);
+      setNextPage(result.data.next);
+    } else {
+      const result = await api.get<ResponsePlanets>(router.params.url);
+      setData(result.data.results);
+      setNextPage(result.data.next);
+    }
+  }, [router.params.url]);
+
   useEffect(() => {
+    router.params && MountedRef && ApiLoad();
+  }, [router.params, MountedRef, ApiLoad]);
+
+  const HandleSearch = (search: string): void => {
     router.params &&
-      MountedRef &&
-      (async () => {
-        if (router.params.url === 'people') {
-          const result = await api.get<ResponseCharacters>(router.params.url);
-          setData(result.data.results);
-          setNextPage(result.data.next);
+      (() => {
+        if (search.length > 0) {
+          setRecents(false);
+          (async () => {
+            if (router.params.url === 'people') {
+              const result = await api.get<ResponseCharacters>(
+                `people/?search=${search}`,
+              );
+              setData(result.data.results);
+              setNextPage(result.data.next);
+            } else {
+              const result = await api.get<ResponsePlanets>(
+                `planets/?search=${search}`,
+              );
+              setData(result.data.results);
+              setNextPage(result.data.next);
+            }
+          })();
         } else {
-          const result = await api.get<ResponsePlanets>(router.params.url);
-          setData(result.data.results);
-          setNextPage(result.data.next);
+          ApiLoad();
+          setRecents(true);
         }
       })();
-  }, [router.params, router.params.url, MountedRef]);
+  };
 
   const LoadNextPage = (): void => {
     router.params &&
@@ -89,6 +117,7 @@ const List: React.FC = () => {
         title={router.params ? router.params.title : undefined}
         goBack
         onPress={() => navigator.goBack()}
+        onSubmit={(text) => HandleSearch(text)}
       />
       <ImageBackground
         source={
@@ -110,32 +139,36 @@ const List: React.FC = () => {
               overScrollMode="always"
               ListHeaderComponent={() => (
                 <>
-                  <Sessions title="Recents" />
-                  <FlatList
-                    horizontal
-                    overScrollMode="always"
-                    data={data as Characters[]}
-                    renderItem={({ item }) => (
-                      <SquareCard
-                        type={{
-                          title: item.name,
-                          type: 'character',
-                          birthday: item.birth_year,
-                          gender: item.gender,
-                          height: item.height,
-                        }}
-                        onPress={() =>
-                          navigator.navigate('Details', {
-                            url: item.url,
-                            type: 'character',
-                          })
-                        }
+                  {recents && (
+                    <>
+                      <Sessions title="Recents" />
+                      <FlatList
+                        horizontal
+                        overScrollMode="always"
+                        data={data as Characters[]}
+                        renderItem={({ item }) => (
+                          <SquareCard
+                            type={{
+                              title: item.name,
+                              type: 'character',
+                              birthday: item.birth_year,
+                              gender: item.gender,
+                              height: item.height,
+                            }}
+                            onPress={() =>
+                              navigator.navigate('Details', {
+                                url: item.url,
+                                type: 'character',
+                              })
+                            }
+                          />
+                        )}
+                        keyExtractor={(item) => item.name}
+                        style={{ marginBottom: 20 }}
                       />
-                    )}
-                    keyExtractor={(item) => item.name}
-                    style={{ marginBottom: 20 }}
-                  />
-                  <Sessions title="All" />
+                      <Sessions title="All" />
+                    </>
+                  )}
                 </>
               )}
               data={data as Characters[]}

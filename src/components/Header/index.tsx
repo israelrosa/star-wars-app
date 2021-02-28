@@ -9,10 +9,17 @@ interface Props {
   title?: string;
   disableSearch?: boolean;
   onPress?: () => void | undefined;
+  onSubmit?: (text: string) => void | undefined;
   goBack?: boolean;
 }
 
-const Header: React.FC<Props> = ({ title, disableSearch, onPress, goBack }) => {
+const Header: React.FC<Props> = ({
+  title,
+  disableSearch,
+  onPress,
+  goBack,
+  onSubmit,
+}) => {
   return (
     <View
       style={{
@@ -49,7 +56,12 @@ const Header: React.FC<Props> = ({ title, disableSearch, onPress, goBack }) => {
           marginTop: 20,
         }}
       />
-      <SearchInput style={{ display: disableSearch ? 'none' : 'flex' }} />
+      {onSubmit && (
+        <SearchInput
+          style={{ display: disableSearch ? 'none' : 'flex' }}
+          onSubmit={(text) => onSubmit(text)}
+        />
+      )}
     </View>
   );
 };

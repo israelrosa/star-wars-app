@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TextInputProps, View } from 'react-native';
 import { RectButton, TextInput } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { fonts, theme } from '../../theme';
 
-const SearchInput: React.FC<TextInputProps> = ({ style, ...rest }) => {
+interface Props extends TextInputProps {
+  onSubmit: (text: string) => void;
+}
+
+const SearchInput: React.FC<Props> = ({ style, onSubmit, ...rest }) => {
+  const [text, setText] = useState('');
+
+  const HandleSubmitText = (): void => {
+    onSubmit(text);
+  };
   return (
     <View style={[styles.container, style]}>
-      <RectButton style={styles.button}>
+      <RectButton style={styles.button} onPress={() => HandleSubmitText()}>
         <Ionicons name="search-outline" size={25} color={theme.searchIcon} />
       </RectButton>
       <TextInput
         style={styles.input}
+        onSubmitEditing={() => HandleSubmitText()}
+        onChangeText={(t) => setText(t)}
         placeholder="Your search here."
         placeholderTextColor="#555555"
         {...rest}
