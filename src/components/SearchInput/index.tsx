@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 15,
     fontFamily: fonts.osw,
+    color: 'white',
   },
 });
 

@@ -1,32 +1,44 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import {
+  TouchableWithoutFeedback,
+  Text,
+  TouchableWithoutFeedbackProps,
+  View,
+} from 'react-native';
 import { fonts, sizes } from '../../theme';
 
-interface Props {
+interface Props extends TouchableWithoutFeedbackProps {
   title: string;
 }
 
-const Sessions: React.FC<Props> = ({ children, title }) => {
+const Sessions: React.FC<Props> = ({ children, title, ...rest }) => {
   return (
-    <View
+    <TouchableWithoutFeedback
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
-        marginLeft: sizes.margin,
       }}
+      {...rest}
     >
-      {children}
-      <Text
+      <View
         style={{
-          fontFamily: fonts.pop,
-          color: 'white',
-          fontSize: 24,
+          flexDirection: 'row',
+          marginBottom: 10,
+          marginLeft: sizes.margin,
         }}
       >
-        {title}
-      </Text>
-    </View>
+        {children}
+        <Text
+          style={{
+            fontFamily: fonts.pop,
+            color: 'white',
+            fontSize: 24,
+          }}
+        >
+          {title}
+        </Text>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

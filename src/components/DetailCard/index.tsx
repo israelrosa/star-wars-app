@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.cardBackground,
     marginBottom: 5,
-    height: 190,
     borderRadius: 20,
     opacity: 0.8,
   },

@@ -6,6 +6,7 @@ export default interface Planets {
   climate: string;
   gravity: string;
   terrain: string;
+  url: string;
   surface_water: string;
   population: string;
   residents: Array<string>;

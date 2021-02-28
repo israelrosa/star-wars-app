@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 import { StyleSheet, Text, View } from 'react-native';
 import { fonts, theme } from '../../theme';
 
@@ -19,85 +20,94 @@ interface Planets {
   climate: string;
 }
 
-export interface CardProps {
+interface CardProps {
   type: Character | Planets;
+  onPress: () => void | undefined;
 }
 
 const iconSize = 20;
 
-const SquareCard: React.FC<CardProps> = ({ type }) => {
+const SquareCard: React.FC<CardProps> = ({ type, onPress }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.titleBar}>
-        <Text
-          style={{ fontFamily: fonts.aure, fontSize: 10, color: theme.primary }}
-        >
-          {type.title}
-        </Text>
-        <Text style={{ fontFamily: fonts.bebas, fontSize: 24, color: 'white' }}>
-          {type.title}
-        </Text>
+    <TouchableHighlight style={styles.container} onPress={onPress}>
+      <View>
+        <View style={styles.titleBar}>
+          <Text
+            style={{
+              fontFamily: fonts.aure,
+              fontSize: 10,
+              color: theme.primary,
+            }}
+          >
+            {type.title}
+          </Text>
+          <Text
+            style={{ fontFamily: fonts.bebas, fontSize: 24, color: 'white' }}
+          >
+            {type.title}
+          </Text>
+        </View>
+        <View style={styles.content}>
+          {type.type === 'character' && (
+            <>
+              <View style={styles.details}>
+                <Ionicons
+                  name="code-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                  style={{ transform: [{ rotateZ: '90deg' }] }}
+                />
+                <Text style={styles.detailsText}>{type.height}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="male-female-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.gender}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="calendar-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.birthday}</Text>
+              </View>
+            </>
+          )}
+          {type.type === 'planet' && (
+            <>
+              <View style={styles.details}>
+                <Ionicons
+                  name="people-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.population}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="man-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.characters}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="cloud-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.climate}</Text>
+              </View>
+            </>
+          )}
+        </View>
       </View>
-      <View style={styles.content}>
-        {type.type === 'character' && (
-          <>
-            <View style={styles.details}>
-              <Ionicons
-                name="code-outline"
-                size={iconSize}
-                color={theme.primary}
-                style={{ transform: [{ rotateZ: '90deg' }] }}
-              />
-              <Text style={styles.detailsText}>{type.height}</Text>
-            </View>
-            <View style={styles.details}>
-              <Ionicons
-                name="male-female-outline"
-                size={iconSize}
-                color={theme.primary}
-              />
-              <Text style={styles.detailsText}>{type.gender}</Text>
-            </View>
-            <View style={styles.details}>
-              <Ionicons
-                name="calendar-outline"
-                size={iconSize}
-                color={theme.primary}
-              />
-              <Text style={styles.detailsText}>{type.birthday}</Text>
-            </View>
-          </>
-        )}
-        {type.type === 'planet' && (
-          <>
-            <View style={styles.details}>
-              <Ionicons
-                name="people-outline"
-                size={iconSize}
-                color={theme.primary}
-              />
-              <Text style={styles.detailsText}>{type.population}</Text>
-            </View>
-            <View style={styles.details}>
-              <Ionicons
-                name="man-outline"
-                size={iconSize}
-                color={theme.primary}
-              />
-              <Text style={styles.detailsText}>{type.characters}</Text>
-            </View>
-            <View style={styles.details}>
-              <Ionicons
-                name="cloud-outline"
-                size={iconSize}
-                color={theme.primary}
-              />
-              <Text style={styles.detailsText}>{type.climate}</Text>
-            </View>
-          </>
-        )}
-      </View>
-    </View>
+    </TouchableHighlight>
   );
 };
 

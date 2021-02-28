@@ -1,4 +1,5 @@
-import React from 'react';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -8,19 +9,70 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import Header from '../../components/Header';
-import RectangularCard, {
-  CardProps as RecCardProps,
-} from '../../components/RectangularCard';
+import RectangularCard from '../../components/RectangularCard';
 import Sessions from '../../components/Sessions';
-import SquareCard, { CardProps } from '../../components/SquareCard';
+import SquareCard from '../../components/SquareCard';
+import Characters from '../../interfaces/Characters';
+import Planets from '../../interfaces/Planets';
+import api from '../../services/api';
 import { theme } from '../../theme';
 
+type RootParams = {
+  List: { url: string; title: string };
+};
+type RouteParams = RouteProp<RootParams, 'List'>;
+
+type ResponsePlanets = {
+  results: Planets[];
+};
+
+type ResponseCharacters = {
+  results: Characters[];
+};
+
 const List: React.FC = () => {
+  const [data, setData] = useState<Planets[] | Characters[]>();
+  const navigator = useNavigation();
+  const router = useRoute<RouteParams>();
+
+  function useIsMountedRef(): React.MutableRefObject<boolean> {
+    const isMountedRef = useRef(true);
+    useEffect(() => {
+      isMountedRef.current = true;
+      return () => {
+        isMountedRef.current = false;
+      };
+    }, []);
+    return isMountedRef;
+  }
+  const MountedRef = useIsMountedRef();
+
+  useEffect(() => {
+    router.params &&
+      MountedRef &&
+      (async () => {
+        if (router.params.url === 'people') {
+          const result = await api.get<ResponseCharacters>(router.params.url);
+          setData(result.data.results);
+        } else {
+          const result = await api.get<ResponsePlanets>(router.params.url);
+          setData(result.data.results);
+        }
+      })();
+  }, [router.params, router.params.url, MountedRef]);
   return (
     <View style={styles.container}>
-      <Header title="Characters" />
+      <Header
+        title={router.params ? router.params.title : undefined}
+        goBack
+        onPress={() => navigator.goBack()}
+      />
       <ImageBackground
-        source={require('../../../assets/images/characters.jpg')}
+        source={
+          router.params?.title === 'Characters'
+            ? require('../../../assets/images/characters.jpg')
+            : require('../../../assets/images/planets.jpg')
+        }
         style={styles.ImageBackground}
         imageStyle={{
           height:
@@ -30,141 +82,122 @@ const List: React.FC = () => {
         }}
       >
         <View style={styles.sessions}>
-          <FlatList
-            overScrollMode="always"
-            ListHeaderComponent={() => (
-              <>
-                <Sessions title="Recents" />
-                <FlatList
-                  horizontal
-                  overScrollMode="always"
-                  data={
-                    [
-                      {
-                        type: {
-                          title: 'Anakin',
+          {router.params?.url === 'people' && (
+            <FlatList
+              overScrollMode="always"
+              ListHeaderComponent={() => (
+                <>
+                  <Sessions title="Recents" />
+                  <FlatList
+                    horizontal
+                    overScrollMode="always"
+                    data={data as Characters[]}
+                    renderItem={({ item }) => (
+                      <SquareCard
+                        type={{
+                          title: item.name,
                           type: 'character',
-                          birthday: '19BBY',
-                          gender: 'male',
-                          specie: 'human',
-                        },
-                      },
-                      {
-                        type: {
-                          title: 'Ahsoka',
-                          type: 'character',
-                          birthday: '19BBY',
-                          gender: 'male',
-                          specie: 'human',
-                        },
-                      },
-                    ] as CardProps[]
+                          birthday: item.birth_year,
+                          gender: item.gender,
+                          height: item.height,
+                        }}
+                        onPress={() =>
+                          navigator.navigate('Details', {
+                            url: item.url,
+                            type: 'character',
+                          })
+                        }
+                      />
+                    )}
+                    keyExtractor={(item) => item.name}
+                    style={{ marginBottom: 20 }}
+                  />
+                  <Sessions title="All" />
+                </>
+              )}
+              data={data as Characters[]}
+              renderItem={({ item }) => (
+                <RectangularCard
+                  type={{
+                    title: item.name,
+                    type: 'character',
+                    birthday: item.birth_year,
+                    gender: item.gender,
+                    height: item.height,
+                    eyesColor: item.eye_color,
+                    skinColor: item.skin_color,
+                    weight: item.mass,
+                  }}
+                  onPress={() =>
+                    navigator.navigate('Details', {
+                      url: item.url,
+                      type: 'character',
+                    })
                   }
-                  renderItem={({ item }) => (
-                    <>
-                      {item.type.type === 'character' ? (
-                        <SquareCard
-                          type={{
-                            title: item.type.title,
-                            type: item.type.type,
-                            birthday: item.type.birthday,
-                            gender: item.type.gender,
-                            specie: item.type.specie,
-                          }}
-                        />
-                      ) : (
-                        <SquareCard
-                          type={{
-                            title: item.type.title,
-                            type: item.type.type,
-                            climate: item.type.climate,
-                            population: item.type.population,
-                            characters: item.type.characters,
-                          }}
-                        />
-                      )}
-                    </>
-                  )}
-                  keyExtractor={(item) => item.type.title}
-                  style={{ marginBottom: 20 }}
                 />
-                <Sessions title="All" />
-              </>
-            )}
-            data={
-              [
-                {
-                  type: {
-                    title: 'Anakin',
-                    type: 'character',
-                    birthday: '19BBY',
-                    gender: 'male',
-                    specie: 'human',
-                    height: '24',
-                    homeworld: 'Tatooine',
-                    weight: '39',
-                  },
-                },
-                {
-                  type: {
-                    title: 'Ahsoka',
-                    type: 'character',
-                    birthday: '19BBY',
-                    height: '24',
-                    homeworld: 'Tatooine',
-                    gender: 'male',
-                    specie: 'human',
-                    weight: '39',
-                  },
-                },
-                {
-                  type: {
-                    title: 'Ahs',
-                    type: 'character',
-                    birthday: '19BBY',
-                    gender: 'male',
-                    specie: 'human',
-                    height: '24',
-                    homeworld: 'Tatooine',
-                    weight: '39',
-                  },
-                },
-              ] as RecCardProps[]
-            }
-            renderItem={({ item }) => (
-              <>
-                {item.type.type === 'character' ? (
-                  <RectangularCard
-                    type={{
-                      title: item.type.title,
-                      type: item.type.type,
-                      birthday: item.type.birthday,
-                      gender: item.type.gender,
-                      specie: item.type.specie,
-                      height: item.type.height,
-                      homeworld: item.type.homeworld,
-                      weight: item.type.weight,
-                    }}
+              )}
+              keyExtractor={(item) => item.name}
+              style={{ marginHorizontal: 5 }}
+            />
+          )}
+          {router.params?.url === 'planets' && (
+            <FlatList
+              overScrollMode="always"
+              ListHeaderComponent={() => (
+                <>
+                  <Sessions title="Recents" />
+                  <FlatList
+                    horizontal
+                    overScrollMode="always"
+                    data={data as Planets[]}
+                    renderItem={({ item }) => (
+                      <SquareCard
+                        type={{
+                          title: item.name,
+                          type: 'planet',
+                          characters: item.residents.length,
+                          climate: item.climate,
+                          population: item.population,
+                        }}
+                        onPress={() =>
+                          navigator.navigate('Details', {
+                            url: item.url,
+                            type: 'planet',
+                          })
+                        }
+                      />
+                    )}
+                    keyExtractor={(item) => item.name}
+                    style={{ marginBottom: 20 }}
                   />
-                ) : (
-                  <RectangularCard
-                    type={{
-                      title: item.type.title,
-                      type: item.type.type,
-                      climate: item.type.climate,
-                      population: item.type.population,
-                      characters: item.type.characters,
-                      diameter: item.type.diameter,
-                      rotationPeriod: item.type.rotationPeriod,
-                      water: item.type.water,
-                    }}
-                  />
-                )}
-              </>
-            )}
-            keyExtractor={(item) => item.type.title}
-            style={{ marginHorizontal: 5 }}
-          />
+                  <Sessions title="All" />
+                </>
+              )}
+              data={data as Planets[]}
+              renderItem={({ item }) => (
+                <RectangularCard
+                  type={{
+                    title: item.name,
+                    type: 'planet',
+                    characters: item.residents.length,
+                    climate: item.climate,
+                    diameter: item.diameter,
+                    population: item.population,
+                    rotationPeriod: item.rotation_period,
+                    water: item.surface_water,
+                  }}
+                  onPress={() =>
+                    navigator.navigate('Details', {
+                      url: item.url,
+                      type: 'planet',
+                    })
+                  }
+                />
+              )}
+              keyExtractor={(item) => item.name}
+              style={{ marginHorizontal: 5 }}
+            />
+          )}
         </View>
       </ImageBackground>
     </View>

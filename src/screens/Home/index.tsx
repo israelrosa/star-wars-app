@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -28,18 +29,16 @@ const Home: React.FC = () => {
   const [planets, setPlanets] = useState<Planets[]>();
   const [characters, setCharacters] = useState<Characters[]>();
 
+  const navigator = useNavigation();
+
   useEffect(() => {
     Promise.all([
       api.get<ResponseCharacters>('people'),
       api.get<ResponsePlanets>('planets'),
-    ])
-      .then((values) => {
-        setCharacters(values[0].data.results);
-        setPlanets(values[1].data.results);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    ]).then((values) => {
+      setCharacters(values[0].data.results);
+      setPlanets(values[1].data.results);
+    });
   }, []);
 
   return (
@@ -51,7 +50,15 @@ const Home: React.FC = () => {
         imageStyle={{ height: '100%' }}
       >
         <View style={styles.sessions}>
-          <Sessions title="Characters">
+          <Sessions
+            title="Characters"
+            onPress={() =>
+              navigator.navigate('List', {
+                url: 'people',
+                title: 'Characters',
+              })
+            }
+          >
             <Ionicons
               name="person-outline"
               color={theme.primary}
@@ -72,6 +79,12 @@ const Home: React.FC = () => {
                   gender: item.gender,
                   height: item.height,
                 }}
+                onPress={() =>
+                  navigator.navigate('Details', {
+                    url: item.url,
+                    type: 'character',
+                  })
+                }
               />
             )}
             keyExtractor={(item) => item.name}
@@ -84,7 +97,15 @@ const Home: React.FC = () => {
         imageStyle={{ height: '100%' }}
       >
         <View style={styles.sessions}>
-          <Sessions title="Planets">
+          <Sessions
+            title="Planets"
+            onPress={() =>
+              navigator.navigate('List', {
+                url: 'planets',
+                title: 'Planets',
+              })
+            }
+          >
             <Ionicons
               name="planet-outline"
               color={theme.primary}
@@ -105,6 +126,12 @@ const Home: React.FC = () => {
                   population: item.population,
                   characters: item.residents.length,
                 }}
+                onPress={() =>
+                  navigator.navigate('Details', {
+                    url: item.url,
+                    type: 'planet',
+                  })
+                }
               />
             )}
             keyExtractor={(item) => item.name}

@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StatusBar, Text, View } from 'react-native';
 import Logo from '../../svgs/logo';
@@ -7,9 +8,11 @@ import SearchInput from '../SearchInput';
 interface Props {
   title?: string;
   disableSearch?: boolean;
+  onPress?: () => void | undefined;
+  goBack?: boolean;
 }
 
-const Header: React.FC<Props> = ({ title, disableSearch }) => {
+const Header: React.FC<Props> = ({ title, disableSearch, onPress, goBack }) => {
   return (
     <View
       style={{
@@ -21,9 +24,18 @@ const Header: React.FC<Props> = ({ title, disableSearch }) => {
         top: (StatusBar.currentHeight as number) + 20,
       }}
     >
+      {goBack && (
+        <Ionicons
+          onPress={onPress}
+          name="chevron-back-outline"
+          size={30}
+          color="white"
+          style={{ position: 'absolute', left: 20, top: 7 }}
+        />
+      )}
       {title ? (
         <Text
-          style={{ fontFamily: fonts.sw, fontSize: 24, color: theme.primary }}
+          style={{ fontFamily: fonts.sw, fontSize: 26, color: theme.primary }}
         >
           {title}
         </Text>

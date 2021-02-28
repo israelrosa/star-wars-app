@@ -8,6 +8,7 @@ export default interface Characters {
   birth_year: string;
   gender: string;
   homeworld: string;
+  url: string;
   films: Array<string>;
   vehicles: Array<string>;
   species: Array<string>;
