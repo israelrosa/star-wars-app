@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Routes from './src/routes';
 import { store, persistor } from './src/store';
+import Load from './src/screens/Load';
 
 const App: React.FC = () => {
   const [loaded] = useFonts({
@@ -21,8 +22,9 @@ const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        {loaded && <Routes />}
+      <PersistGate loading={<Load />} persistor={persistor}>
+        {loaded ? <Routes /> : <Load />}
+
         <StatusBar style="light" translucent />
       </PersistGate>
     </Provider>
