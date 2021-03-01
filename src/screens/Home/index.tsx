@@ -8,7 +8,11 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import { FlatList, TouchableHighlight } from 'react-native-gesture-handler';
+import {
+  FlatList,
+  ScrollView,
+  TouchableHighlight,
+} from 'react-native-gesture-handler';
 import Header from '../../components/Header';
 import Sessions from '../../components/Sessions';
 import SquareCard from '../../components/SquareCard';
@@ -30,10 +34,10 @@ const Home: React.FC = () => {
   const [planets, setPlanets] = useState<Planets[]>();
   const [loading, setLoading] = useState(true);
   const [characters, setCharacters] = useState<Characters[]>();
-  const [isUnmounted, setIsUnmounted] = useState(false);
   const navigator = useNavigation();
 
   useEffect(() => {
+    let isUnmounted = false;
     !isUnmounted &&
       Promise.all([
         api.get<ResponseCharacters>('people'),
@@ -45,9 +49,9 @@ const Home: React.FC = () => {
       });
 
     return () => {
-      setIsUnmounted(true);
+      isUnmounted = true;
     };
-  }, [isUnmounted]);
+  }, []);
 
   return (
     <>
@@ -56,152 +60,154 @@ const Home: React.FC = () => {
       ) : (
         <View style={styles.container}>
           <Header disableSearch />
-          <ImageBackground
-            source={require('../../../assets/images/characters.jpg')}
-            style={styles.charactersBackground}
-            imageStyle={{ height: '100%' }}
-          >
-            <View style={styles.sessions}>
-              <Sessions
-                title="Characters"
-                isPressable
-                onPress={() =>
-                  navigator.navigate('List', {
-                    url: 'people',
-                    title: 'Characters',
-                  })
-                }
-              >
-                <Ionicons
-                  name="person-outline"
-                  color={theme.primary}
-                  size={30}
-                  style={{ marginRight: 10 }}
-                />
-              </Sessions>
-              <FlatList
-                horizontal
-                overScrollMode="always"
-                data={characters}
-                renderItem={({ item }) => (
-                  <SquareCard
-                    type={{
-                      title: item.name,
-                      type: 'character',
-                      birthday: item.birth_year,
-                      gender: item.gender,
-                      height: item.height,
-                    }}
-                    onPress={() =>
-                      navigator.navigate('Details', {
-                        url: item.url,
+          <ScrollView>
+            <ImageBackground
+              source={require('../../../assets/images/characters.jpg')}
+              style={styles.charactersBackground}
+              imageStyle={{ height: '100%' }}
+            >
+              <View style={styles.sessions}>
+                <Sessions
+                  title="Characters"
+                  isPressable
+                  onPress={() =>
+                    navigator.navigate('List', {
+                      url: 'people',
+                      title: 'Characters',
+                    })
+                  }
+                >
+                  <Ionicons
+                    name="person-outline"
+                    color={theme.primary}
+                    size={30}
+                    style={{ marginRight: 10 }}
+                  />
+                </Sessions>
+                <FlatList
+                  horizontal
+                  overScrollMode="always"
+                  data={characters}
+                  renderItem={({ item }) => (
+                    <SquareCard
+                      type={{
+                        title: item.name,
                         type: 'character',
-                      })
-                    }
-                  />
-                )}
-                keyExtractor={(item) => item.name}
-                ListFooterComponent={() => (
-                  <>
-                    {characters && characters?.length > 0 && (
-                      <TouchableHighlight
-                        style={styles.moreContainer}
-                        onPress={() =>
-                          navigator.navigate('List', {
-                            url: 'people',
-                            title: 'Characters',
-                          })
-                        }
-                      >
-                        <Ionicons
-                          name="ellipsis-horizontal"
-                          size={25}
-                          color="white"
-                        />
-                      </TouchableHighlight>
-                    )}
-                  </>
-                )}
-                ListFooterComponentStyle={{
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                }}
-              />
-            </View>
-          </ImageBackground>
-          <ImageBackground
-            source={require('../../../assets/images/planetshome.jpg')}
-            style={styles.planetsBackground}
-            imageStyle={{ height: '100%' }}
-          >
-            <View style={styles.sessions}>
-              <Sessions
-                title="Planets"
-                isPressable
-                onPress={() =>
-                  navigator.navigate('List', {
-                    url: 'planets',
-                    title: 'Planets',
-                  })
-                }
-              >
-                <Ionicons
-                  name="planet-outline"
-                  color={theme.primary}
-                  size={30}
-                  style={{ marginRight: 10 }}
+                        birthday: item.birth_year,
+                        gender: item.gender,
+                        height: item.height,
+                      }}
+                      onPress={() =>
+                        navigator.navigate('Details', {
+                          url: item.url,
+                          type: 'character',
+                        })
+                      }
+                    />
+                  )}
+                  keyExtractor={(item) => item.name}
+                  ListFooterComponent={() => (
+                    <>
+                      {characters && characters?.length > 0 && (
+                        <TouchableHighlight
+                          style={styles.moreContainer}
+                          onPress={() =>
+                            navigator.navigate('List', {
+                              url: 'people',
+                              title: 'Characters',
+                            })
+                          }
+                        >
+                          <Ionicons
+                            name="ellipsis-horizontal"
+                            size={25}
+                            color="white"
+                          />
+                        </TouchableHighlight>
+                      )}
+                    </>
+                  )}
+                  ListFooterComponentStyle={{
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                  }}
                 />
-              </Sessions>
-              <FlatList
-                horizontal
-                overScrollMode="always"
-                data={planets}
-                renderItem={({ item }) => (
-                  <SquareCard
-                    type={{
-                      title: item.name,
-                      type: 'planet',
-                      climate: item.climate,
-                      population: item.population,
-                      characters: item.residents.length,
-                    }}
-                    onPress={() =>
-                      navigator.navigate('Details', {
-                        url: item.url,
-                        type: 'planet',
-                      })
-                    }
+              </View>
+            </ImageBackground>
+            <ImageBackground
+              source={require('../../../assets/images/planetshome.jpg')}
+              style={styles.planetsBackground}
+              imageStyle={{ height: '100%' }}
+            >
+              <View style={styles.sessions}>
+                <Sessions
+                  title="Planets"
+                  isPressable
+                  onPress={() =>
+                    navigator.navigate('List', {
+                      url: 'planets',
+                      title: 'Planets',
+                    })
+                  }
+                >
+                  <Ionicons
+                    name="planet-outline"
+                    color={theme.primary}
+                    size={30}
+                    style={{ marginRight: 10 }}
                   />
-                )}
-                ListFooterComponent={() => (
-                  <>
-                    {planets && planets.length > 0 && (
-                      <TouchableHighlight
-                        style={styles.moreContainer}
-                        onPress={() =>
-                          navigator.navigate('List', {
-                            url: 'planets',
-                            title: 'Planets',
-                          })
-                        }
-                      >
-                        <Ionicons
-                          name="ellipsis-horizontal"
-                          size={25}
-                          color="white"
-                        />
-                      </TouchableHighlight>
-                    )}
-                  </>
-                )}
-                ListFooterComponentStyle={{
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                }}
-                keyExtractor={(item) => item.name}
-              />
-            </View>
-          </ImageBackground>
+                </Sessions>
+                <FlatList
+                  horizontal
+                  overScrollMode="always"
+                  data={planets}
+                  renderItem={({ item }) => (
+                    <SquareCard
+                      type={{
+                        title: item.name,
+                        type: 'planet',
+                        climate: item.climate,
+                        population: item.population,
+                        characters: item.residents.length,
+                      }}
+                      onPress={() =>
+                        navigator.navigate('Details', {
+                          url: item.url,
+                          type: 'planet',
+                        })
+                      }
+                    />
+                  )}
+                  ListFooterComponent={() => (
+                    <>
+                      {planets && planets.length > 0 && (
+                        <TouchableHighlight
+                          style={styles.moreContainer}
+                          onPress={() =>
+                            navigator.navigate('List', {
+                              url: 'planets',
+                              title: 'Planets',
+                            })
+                          }
+                        >
+                          <Ionicons
+                            name="ellipsis-horizontal"
+                            size={25}
+                            color="white"
+                          />
+                        </TouchableHighlight>
+                      )}
+                    </>
+                  )}
+                  ListFooterComponentStyle={{
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                  }}
+                  keyExtractor={(item) => item.name}
+                />
+              </View>
+            </ImageBackground>
+          </ScrollView>
         </View>
       )}
     </>

@@ -41,9 +41,9 @@ type PlanetsSelector = { planets: PlanetHistoryState };
 
 const List: React.FC = () => {
   const [data, setData] = useState<Planets[] | Characters[]>();
-  const [recents, setRecents] = useState(true);
+  const [isSearch, setIsSearch] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState('');
-  const [isUnmounted, setIsUnmounted] = useState(false);
   const navigator = useNavigation();
   const router = useRoute<RouteParams>();
   const planetSelector = useSelector<PlanetsSelector, Planets[]>(
@@ -54,32 +54,34 @@ const List: React.FC = () => {
   );
 
   const ApiLoad = useCallback(async () => {
-    if (!isUnmounted) {
-      if (router.params.url === 'people') {
-        const result = await api.get<ResponseCharacters>(router.params.url);
-        setData(result.data.results);
-        setNextPage(result.data.next);
-      } else {
-        const result = await api.get<ResponsePlanets>(router.params.url);
-        setData(result.data.results);
-        setNextPage(result.data.next);
-      }
+    setIsLoading(true);
+    if (router.params.url === 'people') {
+      const result = await api.get<ResponseCharacters>(router.params.url);
+      setData(result.data.results);
+      setNextPage(result.data.next);
+    } else {
+      const result = await api.get<ResponsePlanets>(router.params.url);
+      setData(result.data.results);
+      setNextPage(result.data.next);
     }
-
-    return () => {
-      setIsUnmounted(true);
-    };
-  }, [router.params.url, isUnmounted]);
+    setIsLoading(false);
+  }, [router.params.url]);
 
   useEffect(() => {
-    router.params && ApiLoad();
+    let isUnmounted = false;
+    router.params && !isUnmounted && ApiLoad();
+
+    return () => {
+      isUnmounted = true;
+    };
   }, [router.params, ApiLoad]);
 
   const HandleSearch = (search: string): void => {
+    setIsLoading(false);
     router.params &&
       (() => {
         if (search.length > 0) {
-          setRecents(false);
+          setIsSearch(true);
           (async () => {
             if (router.params.url === 'people') {
               const result = await api.get<ResponseCharacters>(
@@ -97,27 +99,32 @@ const List: React.FC = () => {
           })();
         } else {
           ApiLoad();
-          setRecents(true);
+          setIsSearch(false);
         }
       })();
   };
 
   const LoadNextPage = (): void => {
-    router.params &&
-      nextPage &&
+    setIsLoading(true);
+    if (router.params && nextPage) {
       (async () => {
         if (router.params.url === 'people') {
           const result = await api.get<ResponseCharacters>(nextPage);
           const previousData = data?.slice() as Characters[];
           setData(previousData.concat(result.data.results));
           setNextPage(result.data.next);
+          setIsLoading(false);
         } else {
           const result = await api.get<ResponsePlanets>(nextPage);
           const previousData = data?.slice() as Planets[];
           setData(previousData.concat(result.data.results));
           setNextPage(result.data.next);
+          setIsLoading(false);
         }
       })();
+    } else {
+      setIsLoading(false);
+    }
   };
   return (
     <View style={styles.container}>
@@ -147,7 +154,7 @@ const List: React.FC = () => {
               overScrollMode="always"
               ListHeaderComponent={() => (
                 <>
-                  {recents && characterSelector.length > 0 && (
+                  {!isSearch && characterSelector.length > 0 && (
                     <>
                       <Sessions title="Recents" />
                       <FlatList
@@ -205,7 +212,15 @@ const List: React.FC = () => {
               onEndReached={() => LoadNextPage()}
               onEndReachedThreshold={0.3}
               ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
-              ListFooterComponent={() => <Loading />}
+              ListFooterComponent={() => (
+                <>
+                  {isLoading && (
+                    <>
+                      <Loading />
+                    </>
+                  )}
+                </>
+              )}
             />
           )}
           {router.params?.url === 'planets' && (
@@ -213,32 +228,36 @@ const List: React.FC = () => {
               overScrollMode="always"
               ListHeaderComponent={() => (
                 <>
-                  <Sessions title="Recents" />
-                  <FlatList
-                    horizontal
-                    overScrollMode="always"
-                    data={planetSelector}
-                    renderItem={({ item }) => (
-                      <SquareCard
-                        type={{
-                          title: item.name,
-                          type: 'planet',
-                          characters: item.residents.length,
-                          climate: item.climate,
-                          population: item.population,
-                        }}
-                        onPress={() =>
-                          navigator.navigate('Details', {
-                            url: item.url,
-                            type: 'planet',
-                          })
-                        }
+                  {!isSearch && planetSelector.length > 0 && (
+                    <>
+                      <Sessions title="Recents" />
+                      <FlatList
+                        horizontal
+                        overScrollMode="always"
+                        data={planetSelector}
+                        renderItem={({ item }) => (
+                          <SquareCard
+                            type={{
+                              title: item.name,
+                              type: 'planet',
+                              characters: item.residents.length,
+                              climate: item.climate,
+                              population: item.population,
+                            }}
+                            onPress={() =>
+                              navigator.navigate('Details', {
+                                url: item.url,
+                                type: 'planet',
+                              })
+                            }
+                          />
+                        )}
+                        keyExtractor={(item) => item.name}
+                        style={{ marginBottom: 20 }}
                       />
-                    )}
-                    keyExtractor={(item) => item.name}
-                    style={{ marginBottom: 20 }}
-                  />
-                  <Sessions title="All" />
+                      <Sessions title="All" />
+                    </>
+                  )}
                 </>
               )}
               data={data as Planets[]}
@@ -264,7 +283,15 @@ const List: React.FC = () => {
               )}
               onEndReached={() => LoadNextPage()}
               onEndReachedThreshold={0.3}
-              ListFooterComponent={() => <Loading />}
+              ListFooterComponent={() => (
+                <>
+                  {isLoading && (
+                    <>
+                      <Loading />
+                    </>
+                  )}
+                </>
+              )}
               ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
               keyExtractor={(item) => item.name}
               style={{ marginHorizontal: 5 }}

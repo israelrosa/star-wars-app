@@ -58,7 +58,9 @@ const Details: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let isUnmounted = false;
     router.params &&
+      !isUnmounted &&
       (async () => {
         const result = await api.get<Details>(router.params.url);
         setDetail(result.data);
@@ -69,6 +71,10 @@ const Details: React.FC = () => {
             : AddPlanetHistoryAction(result.data),
         );
       })();
+
+    return () => {
+      isUnmounted = true;
+    };
   }, [router.params, router.params.url, dispatch]);
 
   return (

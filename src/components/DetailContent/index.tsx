@@ -21,10 +21,10 @@ interface Data {
 
 const DetailContent: React.FC<Props> = ({ url, navigate, type }) => {
   const [data, setData] = useState<Data>();
-  const [isUnmounted, setIsUnmounted] = useState(false);
   const navigator = useNavigation();
 
   useEffect(() => {
+    let isUnmounted = false;
     !isUnmounted &&
       (async () => {
         const result = await api.get(url);
@@ -32,9 +32,9 @@ const DetailContent: React.FC<Props> = ({ url, navigate, type }) => {
       })();
 
     return () => {
-      setIsUnmounted(true);
+      isUnmounted = true;
     };
-  }, [url, isUnmounted]);
+  }, [url]);
 
   return (
     <TouchableHighlight
