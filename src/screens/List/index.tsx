@@ -1,5 +1,5 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -10,6 +10,7 @@ import {
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import Header from '../../components/Header';
+import Loading from '../../components/Loading';
 import RectangularCard from '../../components/RectangularCard';
 import Sessions from '../../components/Sessions';
 import SquareCard from '../../components/SquareCard';
@@ -53,23 +54,26 @@ const List: React.FC = () => {
   );
 
   const ApiLoad = useCallback(async () => {
-    if (router.params.url === 'people') {
-      const result = await api.get<ResponseCharacters>(router.params.url);
-      setData(result.data.results);
-      setNextPage(result.data.next);
-    } else {
-      const result = await api.get<ResponsePlanets>(router.params.url);
-      setData(result.data.results);
-      setNextPage(result.data.next);
+    if (!isUnmounted) {
+      if (router.params.url === 'people') {
+        const result = await api.get<ResponseCharacters>(router.params.url);
+        setData(result.data.results);
+        setNextPage(result.data.next);
+      } else {
+        const result = await api.get<ResponsePlanets>(router.params.url);
+        setData(result.data.results);
+        setNextPage(result.data.next);
+      }
     }
-  }, [router.params.url]);
 
-  useEffect(() => {
-    router.params && !isUnmounted && ApiLoad();
     return () => {
       setIsUnmounted(true);
     };
-  }, [router.params, ApiLoad, isUnmounted]);
+  }, [router.params.url, isUnmounted]);
+
+  useEffect(() => {
+    router.params && ApiLoad();
+  }, [router.params, ApiLoad]);
 
   const HandleSearch = (search: string): void => {
     router.params &&
@@ -199,7 +203,9 @@ const List: React.FC = () => {
               keyExtractor={(item) => item.name}
               style={{ marginHorizontal: 5 }}
               onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.6}
+              onEndReachedThreshold={0.3}
+              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
+              ListFooterComponent={() => <Loading />}
             />
           )}
           {router.params?.url === 'planets' && (
@@ -257,7 +263,9 @@ const List: React.FC = () => {
                 />
               )}
               onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.6}
+              onEndReachedThreshold={0.3}
+              ListFooterComponent={() => <Loading />}
+              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
               keyExtractor={(item) => item.name}
               style={{ marginHorizontal: 5 }}
             />

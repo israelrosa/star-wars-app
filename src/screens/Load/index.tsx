@@ -4,8 +4,6 @@ import Loading from '../../components/Loading';
 import Logo from '../../svgs/logo';
 import { theme } from '../../theme';
 
-// import { Container } from './styles';
-
 const Load: React.FC = () => {
   return (
     <View style={styles.container}>

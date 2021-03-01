@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View, ViewProps } from 'react-native';
 import { theme } from '../../theme';
 
 // import { Container } from './styles';
 
-const Loading: React.FC = () => {
+const Loading: React.FC<ViewProps> = ({ style }) => {
   const width1 = useRef(new Animated.Value(0)).current;
   const width2 = useRef(new Animated.Value(0)).current;
   const width3 = useRef(new Animated.Value(0)).current;
@@ -185,7 +185,7 @@ const Loading: React.FC = () => {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <Animated.View
         style={[styles.bar, styles.bar1, { transform: [{ scaleX: width1 }] }]}
       />
@@ -251,8 +251,8 @@ const styles = StyleSheet.create({
   },
 
   bar: {
-    height: 3,
-    marginVertical: 1.5,
+    height: 4,
+    marginVertical: 1,
     borderRadius: 3,
     alignItems: 'center',
     justifyContent: 'center',

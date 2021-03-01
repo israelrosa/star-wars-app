@@ -7,17 +7,15 @@ import {
   ImageBackground,
   StatusBar,
   Dimensions,
-  Text,
 } from 'react-native';
 import { FlatList, TouchableHighlight } from 'react-native-gesture-handler';
 import Header from '../../components/Header';
-import Loading from '../../components/Loading';
 import Sessions from '../../components/Sessions';
 import SquareCard from '../../components/SquareCard';
 import Characters from '../../interfaces/Characters';
 import Planets from '../../interfaces/Planets';
 import api from '../../services/api';
-import { fonts, theme } from '../../theme';
+import { theme } from '../../theme';
 import Load from '../Load';
 
 interface ResponsePlanets {
@@ -49,7 +47,7 @@ const Home: React.FC = () => {
     return () => {
       setIsUnmounted(true);
     };
-  });
+  }, [isUnmounted]);
 
   return (
     <>
@@ -66,6 +64,7 @@ const Home: React.FC = () => {
             <View style={styles.sessions}>
               <Sessions
                 title="Characters"
+                isPressable
                 onPress={() =>
                   navigator.navigate('List', {
                     url: 'people',
@@ -103,21 +102,25 @@ const Home: React.FC = () => {
                 )}
                 keyExtractor={(item) => item.name}
                 ListFooterComponent={() => (
-                  <TouchableHighlight
-                    style={styles.moreContainer}
-                    onPress={() =>
-                      navigator.navigate('List', {
-                        url: 'people',
-                        title: 'Characters',
-                      })
-                    }
-                  >
-                    <Ionicons
-                      name="ellipsis-horizontal"
-                      size={25}
-                      color="white"
-                    />
-                  </TouchableHighlight>
+                  <>
+                    {characters && characters?.length > 0 && (
+                      <TouchableHighlight
+                        style={styles.moreContainer}
+                        onPress={() =>
+                          navigator.navigate('List', {
+                            url: 'people',
+                            title: 'Characters',
+                          })
+                        }
+                      >
+                        <Ionicons
+                          name="ellipsis-horizontal"
+                          size={25}
+                          color="white"
+                        />
+                      </TouchableHighlight>
+                    )}
+                  </>
                 )}
                 ListFooterComponentStyle={{
                   justifyContent: 'center',
@@ -134,6 +137,7 @@ const Home: React.FC = () => {
             <View style={styles.sessions}>
               <Sessions
                 title="Planets"
+                isPressable
                 onPress={() =>
                   navigator.navigate('List', {
                     url: 'planets',
@@ -170,21 +174,25 @@ const Home: React.FC = () => {
                   />
                 )}
                 ListFooterComponent={() => (
-                  <TouchableHighlight
-                    style={styles.moreContainer}
-                    onPress={() =>
-                      navigator.navigate('List', {
-                        url: 'planets',
-                        title: 'Planets',
-                      })
-                    }
-                  >
-                    <Ionicons
-                      name="ellipsis-horizontal"
-                      size={25}
-                      color="white"
-                    />
-                  </TouchableHighlight>
+                  <>
+                    {planets && planets.length > 0 && (
+                      <TouchableHighlight
+                        style={styles.moreContainer}
+                        onPress={() =>
+                          navigator.navigate('List', {
+                            url: 'planets',
+                            title: 'Planets',
+                          })
+                        }
+                      >
+                        <Ionicons
+                          name="ellipsis-horizontal"
+                          size={25}
+                          color="white"
+                        />
+                      </TouchableHighlight>
+                    )}
+                  </>
                 )}
                 ListFooterComponentStyle={{
                   justifyContent: 'center',

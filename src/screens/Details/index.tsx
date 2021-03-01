@@ -1,5 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
+import { WindupChildren } from 'windups';
 import {
   Dimensions,
   ImageBackground,
@@ -51,15 +52,7 @@ interface Details {
 }
 
 const Details: React.FC = () => {
-  const [detail, setDetail] = useState<Details>({
-    name: 'Anakin',
-    eye_color: 'Blue',
-    birth_year: '19BBY',
-    gender: 'Male',
-    height: '177',
-    mass: '77',
-    skin_color: 'Fair',
-  } as Details);
+  const [detail, setDetail] = useState<Details>();
   const navigator = useNavigation();
   const router = useRoute<RouterParams>();
   const dispatch = useDispatch();
@@ -67,7 +60,7 @@ const Details: React.FC = () => {
   useEffect(() => {
     router.params &&
       (async () => {
-        const result = await api.get(router.params.url);
+        const result = await api.get<Details>(router.params.url);
         setDetail(result.data);
 
         dispatch(
@@ -77,6 +70,7 @@ const Details: React.FC = () => {
         );
       })();
   }, [router.params, router.params.url, dispatch]);
+
   return (
     <View style={styles.container}>
       <Header
@@ -101,7 +95,7 @@ const Details: React.FC = () => {
       >
         <View style={styles.titleContainer}>
           <View style={styles.titleDecorators} />
-          <View style={styles.titleContent}>
+          <View style={[styles.titleContent]}>
             <Text
               style={{
                 fontFamily: fonts.aure,
@@ -109,12 +103,12 @@ const Details: React.FC = () => {
                 color: theme.primary,
               }}
             >
-              {detail.name}
+              <WindupChildren>{detail?.name}</WindupChildren>
             </Text>
             <Text
               style={{ fontFamily: fonts.bebas, fontSize: 36, color: 'white' }}
             >
-              {detail.name}
+              <WindupChildren>{detail?.name}</WindupChildren>
             </Text>
           </View>
           <View style={styles.titleDecorators} />
@@ -130,13 +124,13 @@ const Details: React.FC = () => {
             }}
           >
             <View>
-              {detail.height && (
+              {detail?.height && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Heigh:</Text>
                   <Text style={styles.textDetailContent}>{detail.height}</Text>
                 </View>
               )}
-              {detail.hair_color && (
+              {detail?.hair_color && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Hair Color:</Text>
                   <Text style={styles.textDetailContent}>
@@ -144,7 +138,7 @@ const Details: React.FC = () => {
                   </Text>
                 </View>
               )}
-              {detail.skin_color && (
+              {detail?.skin_color && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Skin Color:</Text>
                   <Text style={styles.textDetailContent}>
@@ -152,7 +146,7 @@ const Details: React.FC = () => {
                   </Text>
                 </View>
               )}
-              {detail.rotation_period && (
+              {detail?.rotation_period && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Rotation Period:</Text>
                   <Text style={styles.textDetailContent}>
@@ -160,19 +154,19 @@ const Details: React.FC = () => {
                   </Text>
                 </View>
               )}
-              {detail.climate && (
+              {detail?.climate && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Climate:</Text>
                   <Text style={styles.textDetailContent}>{detail.climate}</Text>
                 </View>
               )}
-              {detail.terrain && (
+              {detail?.terrain && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Terrain:</Text>
                   <Text style={styles.textDetailContent}>{detail.terrain}</Text>
                 </View>
               )}
-              {detail.surface_water && (
+              {detail?.surface_water && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Surface Water:</Text>
                   <Text style={styles.textDetailContent}>
@@ -182,19 +176,19 @@ const Details: React.FC = () => {
               )}
             </View>
             <View>
-              {detail.mass && (
+              {detail?.mass && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Mass:</Text>
                   <Text style={styles.textDetailContent}>{detail.mass}</Text>
                 </View>
               )}
-              {detail.gender && (
+              {detail?.gender && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Gender:</Text>
                   <Text style={styles.textDetailContent}>{detail.gender}</Text>
                 </View>
               )}
-              {detail.orbital_period && (
+              {detail?.orbital_period && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Orbital Period:</Text>
                   <Text style={styles.textDetailContent}>
@@ -202,13 +196,13 @@ const Details: React.FC = () => {
                   </Text>
                 </View>
               )}
-              {detail.gravity && (
+              {detail?.gravity && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Gravity:</Text>
                   <Text style={styles.textDetailContent}>{detail.gravity}</Text>
                 </View>
               )}
-              {detail.diameter && (
+              {detail?.diameter && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Diameter:</Text>
                   <Text style={styles.textDetailContent}>
@@ -216,7 +210,7 @@ const Details: React.FC = () => {
                   </Text>
                 </View>
               )}
-              {detail.population && (
+              {detail?.population && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Population:</Text>
                   <Text style={styles.textDetailContent}>
@@ -226,7 +220,7 @@ const Details: React.FC = () => {
               )}
             </View>
             <View>
-              {detail.birth_year && (
+              {detail?.birth_year && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>birth Year:</Text>
                   <Text style={styles.textDetailContent}>
@@ -234,7 +228,7 @@ const Details: React.FC = () => {
                   </Text>
                 </View>
               )}
-              {detail.eye_color && (
+              {detail?.eye_color && (
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textDetail}>Eye Color:</Text>
                   <Text style={styles.textDetailContent}>
@@ -246,38 +240,40 @@ const Details: React.FC = () => {
           </View>
         </DetailCard>
 
-        {detail.homeworld?.length > 0 && (
+        {detail && detail.homeworld?.length > 0 && (
           <DetailCard title="Homeworld" icon="planet-outline">
             <DetailContent url={detail.homeworld} navigate type="planet" />
           </DetailCard>
         )}
-        {detail.species?.length > 0 && (
+        {detail && detail.species?.length > 0 && (
           <DetailCard title="Species" icon="body-outline">
-            <DetailContent url={detail.species[0]} />
+            {detail.species.map((sp) => (
+              <DetailContent url={sp} key={sp} />
+            ))}
           </DetailCard>
         )}
-        {detail.vehicles?.length > 0 && (
+        {detail && detail.vehicles?.length > 0 && (
           <DetailCard title="Vehicles" icon="car-outline">
             {detail.vehicles.map((v) => (
               <DetailContent url={v} key={v} />
             ))}
           </DetailCard>
         )}
-        {detail.starships?.length > 0 && (
+        {detail && detail.starships?.length > 0 && (
           <DetailCard title="Starships" icon="rocket-outline">
             {detail.starships.map((st) => (
               <DetailContent url={st} key={st} />
             ))}
           </DetailCard>
         )}
-        {detail.residents?.length > 0 && (
+        {detail && detail.residents?.length > 0 && (
           <DetailCard title="Residents" icon="man-outline">
             {detail.residents.map((rs) => (
               <DetailContent url={rs} key={rs} navigate type="character" />
             ))}
           </DetailCard>
         )}
-        {detail.films?.length > 0 && (
+        {detail && detail.films?.length > 0 && (
           <DetailCard title="Films" icon="film-outline">
             {detail.films.map((flm) => (
               <DetailContent url={flm} key={flm} />
