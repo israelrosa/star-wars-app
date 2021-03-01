@@ -9,7 +9,6 @@ import {
   Dimensions,
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { useDispatch } from 'react-redux';
 import Header from '../../components/Header';
 import Sessions from '../../components/Sessions';
 import SquareCard from '../../components/SquareCard';
@@ -29,17 +28,23 @@ interface ResponseCharacters {
 const Home: React.FC = () => {
   const [planets, setPlanets] = useState<Planets[]>();
   const [characters, setCharacters] = useState<Characters[]>();
+  const [isUnmounted, setIsUnmounted] = useState(false);
   const navigator = useNavigation();
 
   useEffect(() => {
-    Promise.all([
-      api.get<ResponseCharacters>('people'),
-      api.get<ResponsePlanets>('planets'),
-    ]).then((values) => {
-      setCharacters(values[0].data.results);
-      setPlanets(values[1].data.results);
-    });
-  }, []);
+    !isUnmounted &&
+      Promise.all([
+        api.get<ResponseCharacters>('people'),
+        api.get<ResponsePlanets>('planets'),
+      ]).then((values) => {
+        setCharacters(values[0].data.results);
+        setPlanets(values[1].data.results);
+      });
+
+    return () => {
+      setIsUnmounted(true);
+    };
+  }, [isUnmounted]);
 
   return (
     <View style={styles.container}>

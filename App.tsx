@@ -6,8 +6,9 @@ import { Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import Routes from './src/routes';
-import store from './src/store';
+import { store, persistor } from './src/store';
 
 const App: React.FC = () => {
   const [loaded] = useFonts({
@@ -20,8 +21,10 @@ const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      {loaded && <Routes />}
-      <StatusBar style="light" translucent />
+      <PersistGate loading={null} persistor={persistor}>
+        {loaded && <Routes />}
+        <StatusBar style="light" translucent />
+      </PersistGate>
     </Provider>
   );
 };

@@ -42,6 +42,7 @@ const List: React.FC = () => {
   const [data, setData] = useState<Planets[] | Characters[]>();
   const [recents, setRecents] = useState(true);
   const [nextPage, setNextPage] = useState('');
+  const [isUnmounted, setIsUnmounted] = useState(false);
   const navigator = useNavigation();
   const router = useRoute<RouteParams>();
   const planetSelector = useSelector<PlanetsSelector, Planets[]>(
@@ -50,18 +51,6 @@ const List: React.FC = () => {
   const characterSelector = useSelector<CharacterSelector, Characters[]>(
     ({ characters }) => characters.characters,
   );
-
-  function useIsMountedRef(): React.MutableRefObject<boolean> {
-    const isMountedRef = useRef(true);
-    useEffect(() => {
-      isMountedRef.current = true;
-      return () => {
-        isMountedRef.current = false;
-      };
-    }, []);
-    return isMountedRef;
-  }
-  const MountedRef = useIsMountedRef();
 
   const ApiLoad = useCallback(async () => {
     if (router.params.url === 'people') {
@@ -76,8 +65,11 @@ const List: React.FC = () => {
   }, [router.params.url]);
 
   useEffect(() => {
-    router.params && MountedRef && ApiLoad();
-  }, [router.params, MountedRef, ApiLoad]);
+    router.params && !isUnmounted && ApiLoad();
+    return () => {
+      setIsUnmounted(true);
+    };
+  }, [router.params, ApiLoad, isUnmounted]);
 
   const HandleSearch = (search: string): void => {
     router.params &&
