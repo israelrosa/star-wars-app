@@ -88,8 +88,8 @@ const Details: React.FC = () => {
       <ImageBackground
         source={
           router.params?.type === 'planet'
-            ? require('../../../assets/images/planetsdetails.jpg')
-            : require('../../../assets/images/charactersdetails.jpg')
+            ? require('../../../assets/images/details/planetsdetails.jpg')
+            : require('../../../assets/images/details/charactersdetails.jpg')
         }
         style={styles.ImageBackground}
         imageStyle={{

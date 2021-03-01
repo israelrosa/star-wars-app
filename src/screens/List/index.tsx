@@ -15,7 +15,11 @@ import RectangularCard from '../../components/RectangularCard';
 import Sessions from '../../components/Sessions';
 import SquareCard from '../../components/SquareCard';
 import Characters from '../../interfaces/Characters';
+import Films from '../../interfaces/Films';
 import Planets from '../../interfaces/Planets';
+import Species from '../../interfaces/Species';
+import Starships from '../../interfaces/Starships';
+import Vehicles from '../../interfaces/Vehicles';
 import api from '../../services/api';
 import { CharacterHistoryState } from '../../store/types/characterTypes';
 import { PlanetHistoryState } from '../../store/types/planetTypes';
@@ -26,21 +30,24 @@ type RootParams = {
 };
 type RouteParams = RouteProp<RootParams, 'List'>;
 
-type ResponsePlanets = {
+type Response = {
   next: string;
-  results: Planets[];
-};
-
-type ResponseCharacters = {
-  next: string;
-  results: Characters[];
+  results:
+    | Planets[]
+    | Characters[]
+    | Species[]
+    | Films[]
+    | Vehicles[]
+    | Starships[];
 };
 
 type CharacterSelector = { characters: CharacterHistoryState };
 type PlanetsSelector = { planets: PlanetHistoryState };
 
 const List: React.FC = () => {
-  const [data, setData] = useState<Planets[] | Characters[]>();
+  const [data, setData] = useState<
+    Planets[] | Characters[] | Species[] | Films[] | Vehicles[] | Starships[]
+  >([]);
   const [isSearch, setIsSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState('');
@@ -55,12 +62,8 @@ const List: React.FC = () => {
 
   const ApiLoad = useCallback(async () => {
     setIsLoading(true);
-    if (router.params.url === 'people') {
-      const result = await api.get<ResponseCharacters>(router.params.url);
-      setData(result.data.results);
-      setNextPage(result.data.next);
-    } else {
-      const result = await api.get<ResponsePlanets>(router.params.url);
+    if (router.params.url) {
+      const result = await api.get(router.params.url);
       setData(result.data.results);
       setNextPage(result.data.next);
     }
@@ -83,15 +86,9 @@ const List: React.FC = () => {
         if (search.length > 0) {
           setIsSearch(true);
           (async () => {
-            if (router.params.url === 'people') {
-              const result = await api.get<ResponseCharacters>(
-                `people/?search=${search}`,
-              );
-              setData(result.data.results);
-              setNextPage(result.data.next);
-            } else {
-              const result = await api.get<ResponsePlanets>(
-                `planets/?search=${search}`,
+            if (router.params.url) {
+              const result = await api.get<Response>(
+                `${router.params.url}/?search=${search}`,
               );
               setData(result.data.results);
               setNextPage(result.data.next);
@@ -108,16 +105,11 @@ const List: React.FC = () => {
     setIsLoading(true);
     if (router.params && nextPage) {
       (async () => {
-        if (router.params.url === 'people') {
-          const result = await api.get<ResponseCharacters>(nextPage);
-          const previousData = data?.slice() as Characters[];
-          setData(previousData.concat(result.data.results));
-          setNextPage(result.data.next);
-          setIsLoading(false);
-        } else {
-          const result = await api.get<ResponsePlanets>(nextPage);
-          const previousData = data?.slice() as Planets[];
-          setData(previousData.concat(result.data.results));
+        if (router.params.url) {
+          const result = await api.get(nextPage);
+          const previousData = data?.slice();
+          previousData.push(result.data.results);
+          setData(previousData);
           setNextPage(result.data.next);
           setIsLoading(false);
         }
@@ -136,9 +128,18 @@ const List: React.FC = () => {
       />
       <ImageBackground
         source={
-          router.params?.title === 'Characters'
-            ? require('../../../assets/images/characters.jpg')
-            : require('../../../assets/images/planets.jpg')
+          (router.params?.title === 'Characters' &&
+            require('../../../assets/images/list/characters.jpg')) ||
+          (router.params?.title === 'Planets' &&
+            require('../../../assets/images/list/planets.jpg')) ||
+          (router.params?.title === 'Species' &&
+            require('../../../assets/images/list/species.jpg')) ||
+          (router.params?.title === 'Films' &&
+            require('../../../assets/images/list/films.jpg')) ||
+          (router.params?.title === 'Vehicles' &&
+            require('../../../assets/images/list/vehicles.jpg')) ||
+          (router.params?.title === 'Starships' &&
+            require('../../../assets/images/list/starships.jpg'))
         }
         style={styles.ImageBackground}
         imageStyle={{
@@ -228,7 +229,7 @@ const List: React.FC = () => {
               overScrollMode="always"
               ListHeaderComponent={() => (
                 <>
-                  {!isSearch && planetSelector.length > 0 && (
+                  {!isSearch && planetSelector?.length > 0 && (
                     <>
                       <Sessions title="Recents" />
                       <FlatList
@@ -240,7 +241,7 @@ const List: React.FC = () => {
                             type={{
                               title: item.name,
                               type: 'planet',
-                              characters: item.residents.length,
+                              characters: item.residents?.length,
                               climate: item.climate,
                               population: item.population,
                             }}
@@ -277,6 +278,296 @@ const List: React.FC = () => {
                     navigator.navigate('Details', {
                       url: item.url,
                       type: 'planet',
+                    })
+                  }
+                />
+              )}
+              onEndReached={() => LoadNextPage()}
+              onEndReachedThreshold={0.3}
+              ListFooterComponent={() => (
+                <>
+                  {isLoading && (
+                    <>
+                      <Loading />
+                    </>
+                  )}
+                </>
+              )}
+              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
+              keyExtractor={(item) => item.name}
+              style={{ marginHorizontal: 5 }}
+            />
+          )}
+          {router.params?.url === 'species' && (
+            <FlatList
+              overScrollMode="always"
+              ListHeaderComponent={() => (
+                <>
+                  {!isSearch && planetSelector?.length > 0 && (
+                    <>
+                      <Sessions title="Recents" />
+                      <FlatList
+                        horizontal
+                        overScrollMode="always"
+                        data={planetSelector}
+                        renderItem={({ item }) => (
+                          <SquareCard
+                            type={{
+                              title: item.name,
+                              type: 'planet',
+                              characters: item.residents?.length,
+                              climate: item.climate,
+                              population: item.population,
+                            }}
+                            onPress={() =>
+                              navigator.navigate('Details', {
+                                url: item.url,
+                                type: 'planet',
+                              })
+                            }
+                          />
+                        )}
+                        keyExtractor={(item) => item.name}
+                        style={{ marginBottom: 20 }}
+                      />
+                      <Sessions title="All" />
+                    </>
+                  )}
+                </>
+              )}
+              data={data as Species[]}
+              renderItem={({ item }) => (
+                <RectangularCard
+                  type={{
+                    title: item.name,
+                    type: 'specie',
+                    averangeHeight: item.average_height,
+                    averangeLife: item.average_lifespan,
+                    designation: item.designation,
+                    language: item.language,
+                    classification: item.classification,
+                  }}
+                  onPress={() =>
+                    navigator.navigate('Details', {
+                      url: item.url,
+                      type: 'specie',
+                    })
+                  }
+                />
+              )}
+              onEndReached={() => LoadNextPage()}
+              onEndReachedThreshold={0.3}
+              ListFooterComponent={() => (
+                <>
+                  {isLoading && (
+                    <>
+                      <Loading />
+                    </>
+                  )}
+                </>
+              )}
+              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
+              keyExtractor={(item) => item.name}
+              style={{ marginHorizontal: 5 }}
+            />
+          )}
+          {router.params?.url === 'films' && (
+            <FlatList
+              overScrollMode="always"
+              ListHeaderComponent={() => (
+                <>
+                  {!isSearch && planetSelector?.length > 0 && (
+                    <>
+                      <Sessions title="Recents" />
+                      <FlatList
+                        horizontal
+                        overScrollMode="always"
+                        data={planetSelector}
+                        renderItem={({ item }) => (
+                          <SquareCard
+                            type={{
+                              title: item.name,
+                              type: 'planet',
+                              characters: item.residents?.length,
+                              climate: item.climate,
+                              population: item.population,
+                            }}
+                            onPress={() =>
+                              navigator.navigate('Details', {
+                                url: item.url,
+                                type: 'planet',
+                              })
+                            }
+                          />
+                        )}
+                        keyExtractor={(item) => item.name}
+                        style={{ marginBottom: 20 }}
+                      />
+                      <Sessions title="All" />
+                    </>
+                  )}
+                </>
+              )}
+              data={data as Films[]}
+              renderItem={({ item }) => (
+                <RectangularCard
+                  type={{
+                    title: item.title,
+                    type: 'film',
+                    abstract: item.opening_crawl,
+                  }}
+                  onPress={() =>
+                    navigator.navigate('Details', {
+                      url: item.url,
+                      type: 'film',
+                    })
+                  }
+                />
+              )}
+              onEndReached={() => LoadNextPage()}
+              onEndReachedThreshold={0.3}
+              ListFooterComponent={() => (
+                <>
+                  {isLoading && (
+                    <>
+                      <Loading />
+                    </>
+                  )}
+                </>
+              )}
+              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
+              keyExtractor={(item) => item.name}
+              style={{ marginHorizontal: 5 }}
+            />
+          )}
+          {router.params?.url === 'vehicles' && (
+            <FlatList
+              overScrollMode="always"
+              ListHeaderComponent={() => (
+                <>
+                  {!isSearch && planetSelector?.length > 0 && (
+                    <>
+                      <Sessions title="Recents" />
+                      <FlatList
+                        horizontal
+                        overScrollMode="always"
+                        data={planetSelector}
+                        renderItem={({ item }) => (
+                          <SquareCard
+                            type={{
+                              title: item.name,
+                              type: 'planet',
+                              characters: item.residents?.length,
+                              climate: item.climate,
+                              population: item.population,
+                            }}
+                            onPress={() =>
+                              navigator.navigate('Details', {
+                                url: item.url,
+                                type: 'planet',
+                              })
+                            }
+                          />
+                        )}
+                        keyExtractor={(item) => item.name}
+                        style={{ marginBottom: 20 }}
+                      />
+                      <Sessions title="All" />
+                    </>
+                  )}
+                </>
+              )}
+              data={data as Vehicles[]}
+              renderItem={({ item }) => (
+                <RectangularCard
+                  type={{
+                    title: item.name,
+                    type: 'automobile',
+                    capacity: item.cargo_capacity,
+                    cost: item.cost_in_credits,
+                    crew: item.crew,
+                    lenght: item.length,
+                    passengers: item.passengers,
+                    speed: item.max_atmosphering_speed,
+                  }}
+                  onPress={() =>
+                    navigator.navigate('Details', {
+                      url: item.url,
+                      type: 'vehicle',
+                    })
+                  }
+                />
+              )}
+              onEndReached={() => LoadNextPage()}
+              onEndReachedThreshold={0.3}
+              ListFooterComponent={() => (
+                <>
+                  {isLoading && (
+                    <>
+                      <Loading />
+                    </>
+                  )}
+                </>
+              )}
+              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
+              keyExtractor={(item) => item.name}
+              style={{ marginHorizontal: 5 }}
+            />
+          )}
+          {router.params?.url === 'starships' && (
+            <FlatList
+              overScrollMode="always"
+              ListHeaderComponent={() => (
+                <>
+                  {!isSearch && planetSelector?.length > 0 && (
+                    <>
+                      <Sessions title="Recents" />
+                      <FlatList
+                        horizontal
+                        overScrollMode="always"
+                        data={planetSelector}
+                        renderItem={({ item }) => (
+                          <SquareCard
+                            type={{
+                              title: item.name,
+                              type: 'planet',
+                              characters: item.residents?.length,
+                              climate: item.climate,
+                              population: item.population,
+                            }}
+                            onPress={() =>
+                              navigator.navigate('Details', {
+                                url: item.url,
+                                type: 'planet',
+                              })
+                            }
+                          />
+                        )}
+                        keyExtractor={(item) => item.name}
+                        style={{ marginBottom: 20 }}
+                      />
+                      <Sessions title="All" />
+                    </>
+                  )}
+                </>
+              )}
+              data={data as Starships[]}
+              renderItem={({ item }) => (
+                <RectangularCard
+                  type={{
+                    title: item.name,
+                    type: 'automobile',
+                    capacity: item.cargo_capacity,
+                    cost: item.cost_in_credits,
+                    crew: item.crew,
+                    lenght: item.length,
+                    passengers: item.passengers,
+                    speed: item.max_atmosphering_speed,
+                  }}
+                  onPress={() =>
+                    navigator.navigate('Details', {
+                      url: item.url,
+                      type: 'starship',
                     })
                   }
                 />

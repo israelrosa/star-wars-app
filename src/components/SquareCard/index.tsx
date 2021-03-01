@@ -11,17 +11,37 @@ interface Character {
   gender: string;
   birthday: string;
 }
-
-interface Planets {
+interface Planet {
   title: string;
   type: 'planet';
   population: string;
   characters: number;
   climate: string;
 }
+interface Specie {
+  title: string;
+  type: 'specie';
+  language: string;
+  averangeLife: string;
+  averangeHeight: string;
+}
+interface Film {
+  title: string;
+  type: 'film';
+  director: string;
+  episode: number;
+  date: string;
+}
+interface Automobiles {
+  title: string;
+  type: 'automobile';
+  cost: string;
+  passengers: string;
+  crew: string;
+}
 
 interface CardProps {
-  type: Character | Planets;
+  type: Character | Planet | Specie | Film | Automobiles;
   onPress: () => void | undefined;
 }
 
@@ -105,6 +125,91 @@ const SquareCard: React.FC<CardProps> = ({ type, onPress }) => {
               </View>
             </>
           )}
+          {type.type === 'specie' && (
+            <>
+              <View style={styles.details}>
+                <Ionicons
+                  name="language-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.language}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="heart-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.averangeLife}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="code-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                  style={{ transform: [{ rotateZ: '90deg' }] }}
+                />
+                <Text style={styles.detailsText}>{type.averangeHeight}</Text>
+              </View>
+            </>
+          )}
+          {type.type === 'film' && (
+            <>
+              <View style={styles.details}>
+                <Ionicons
+                  name="clipboard-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.director}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="albums-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.episode}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="calendar-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.date}</Text>
+              </View>
+            </>
+          )}
+          {type.type === 'automobile' && (
+            <>
+              <View style={styles.details}>
+                <Ionicons
+                  name="pricetag-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.cost}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="people-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.passengers}</Text>
+              </View>
+              <View style={styles.details}>
+                <Ionicons
+                  name="briefcase-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.crew}</Text>
+              </View>
+            </>
+          )}
         </View>
       </View>
     </TouchableHighlight>
@@ -115,7 +220,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.cardBackground,
     minWidth: 150,
-    maxWidth: 200,
+    maxWidth: 300,
     borderRadius: 20,
     opacity: 0.8,
     marginLeft: 5,

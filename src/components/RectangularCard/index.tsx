@@ -26,8 +26,34 @@ interface Planets {
   water: string;
 }
 
+interface Specie {
+  title: string;
+  type: 'specie';
+  language: string;
+  averangeLife: string;
+  averangeHeight: string;
+  classification: string;
+  designation: string;
+}
+
+interface Film {
+  title: string;
+  type: 'film';
+  abstract: string;
+}
+
+interface Automobiles {
+  title: string;
+  type: 'automobile';
+  cost: string;
+  passengers: string;
+  crew: string;
+  speed: string;
+  capacity: string;
+  lenght: string;
+}
 interface CardProps {
-  type: Character | Planets;
+  type: Character | Planets | Specie | Film | Automobiles;
   onPress: () => void | undefined;
 }
 
@@ -170,6 +196,118 @@ const RectangularCard: React.FC<CardProps> = ({ type, onPress }) => {
                     color={theme.primary}
                   />
                   <Text style={styles.detailsText}>{type.climate}</Text>
+                </View>
+              </View>
+            </>
+          )}
+          {type.type === 'specie' && (
+            <>
+              <View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="language-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.language}</Text>
+                </View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="code-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                    style={{ transform: [{ rotateZ: '90deg' }] }}
+                  />
+                  <Text style={styles.detailsText}>{type.averangeHeight}</Text>
+                </View>
+              </View>
+              <View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="heart-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.averangeLife}</Text>
+                </View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="briefcase-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.designation}</Text>
+                </View>
+              </View>
+              <View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="paw-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.classification}</Text>
+                </View>
+              </View>
+            </>
+          )}
+          {type.type === 'film' && (
+            <Text numberOfLines={5}>{type.abstract}</Text>
+          )}
+          {type.type === 'automobile' && (
+            <>
+              <View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="people-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.passengers}</Text>
+                </View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="briefcase-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.crew}</Text>
+                </View>
+              </View>
+              <View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="pricetag-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.cost}</Text>
+                </View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="code-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.lenght}</Text>
+                </View>
+              </View>
+              <View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="speedometer-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.speed}</Text>
+                </View>
+                <View style={styles.details}>
+                  <Ionicons
+                    name="expand-outline"
+                    size={iconSize}
+                    color={theme.primary}
+                  />
+                  <Text style={styles.detailsText}>{type.capacity}</Text>
                 </View>
               </View>
             </>

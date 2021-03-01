@@ -65,6 +65,7 @@ const Sessions: React.FC<Props> = ({
             fontFamily: fonts.pop,
             color: 'white',
             fontSize: 24,
+            top: 2,
           }}
         >
           {title}

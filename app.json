@@ -27,6 +27,11 @@
     },
     "web": {
       "favicon": "./assets/Adaptive-icon.png"
+    },
+    "androidNavigationBar": {
+      "visible":  "immersive",
+      "barStyle":"light-content",
+      "backgroundColor": "#121212"
     }
   }
 }
