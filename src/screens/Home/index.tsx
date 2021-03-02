@@ -107,6 +107,7 @@ const Home: React.FC = () => {
                       navigator.navigate('List', {
                         url: 'people',
                         title: 'Characters',
+                        type: 'character',
                       })
                     }
                   >
@@ -148,6 +149,7 @@ const Home: React.FC = () => {
                               navigator.navigate('List', {
                                 url: 'people',
                                 title: 'Characters',
+                                type: 'character',
                               })
                             }
                           >
@@ -186,6 +188,7 @@ const Home: React.FC = () => {
                       navigator.navigate('List', {
                         url: 'planets',
                         title: 'Planets',
+                        type: 'planet',
                       })
                     }
                   >
@@ -226,6 +229,7 @@ const Home: React.FC = () => {
                               navigator.navigate('List', {
                                 url: 'planets',
                                 title: 'Planets',
+                                type: 'planet',
                               })
                             }
                           >
@@ -265,6 +269,7 @@ const Home: React.FC = () => {
                       navigator.navigate('List', {
                         url: 'species',
                         title: 'Species',
+                        type: 'specie',
                       })
                     }
                   >
@@ -305,6 +310,7 @@ const Home: React.FC = () => {
                               navigator.navigate('List', {
                                 url: 'species',
                                 title: 'Species',
+                                type: 'specie',
                               })
                             }
                           >
@@ -344,6 +350,7 @@ const Home: React.FC = () => {
                       navigator.navigate('List', {
                         url: 'films',
                         title: 'Films',
+                        type: 'film',
                       })
                     }
                   >
@@ -384,6 +391,7 @@ const Home: React.FC = () => {
                               navigator.navigate('List', {
                                 url: 'films',
                                 title: 'Films',
+                                type: 'film',
                               })
                             }
                           >
@@ -423,6 +431,7 @@ const Home: React.FC = () => {
                       navigator.navigate('List', {
                         url: 'vehicles',
                         title: 'Vehicles',
+                        type: 'vehicle',
                       })
                     }
                   >
@@ -463,6 +472,7 @@ const Home: React.FC = () => {
                               navigator.navigate('List', {
                                 url: 'vehicles',
                                 title: 'Vehicles',
+                                type: 'vehicle',
                               })
                             }
                           >
@@ -502,6 +512,7 @@ const Home: React.FC = () => {
                       navigator.navigate('List', {
                         url: 'starships',
                         title: 'Starships',
+                        type: 'starship',
                       })
                     }
                   >
@@ -542,6 +553,7 @@ const Home: React.FC = () => {
                               navigator.navigate('List', {
                                 url: 'starships',
                                 title: 'Starships',
+                                type: 'starship',
                               })
                             }
                           >

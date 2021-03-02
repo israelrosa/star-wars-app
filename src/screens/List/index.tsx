@@ -14,6 +14,7 @@ import Loading from '../../components/Loading';
 import RectangularCard from '../../components/RectangularCard';
 import Sessions from '../../components/Sessions';
 import SquareCard from '../../components/SquareCard';
+import All from '../../interfaces/All';
 import Characters from '../../interfaces/Characters';
 import Films from '../../interfaces/Films';
 import Planets from '../../interfaces/Planets';
@@ -22,32 +23,36 @@ import Starships from '../../interfaces/Starships';
 import Vehicles from '../../interfaces/Vehicles';
 import api from '../../services/api';
 import { CharacterHistoryState } from '../../store/types/characterTypes';
+import { FilmHistoryState } from '../../store/types/filmTypes';
 import { PlanetHistoryState } from '../../store/types/planetTypes';
+import { SpecieHistoryState } from '../../store/types/specieTypes';
+import { StarshipHistoryState } from '../../store/types/starshipTypes';
+import { VehicleHistoryState } from '../../store/types/vehicleTypes';
 import { theme } from '../../theme';
 
 type RootParams = {
-  List: { url: string; title: string };
+  List: {
+    url: string;
+    title: string;
+    type: 'character' | 'planet' | 'specie' | 'film' | 'vehicle' | 'starship';
+  };
 };
 type RouteParams = RouteProp<RootParams, 'List'>;
 
 type Response = {
   next: string;
-  results:
-    | Planets[]
-    | Characters[]
-    | Species[]
-    | Films[]
-    | Vehicles[]
-    | Starships[];
+  results: All[];
 };
 
 type CharacterSelector = { characters: CharacterHistoryState };
 type PlanetsSelector = { planets: PlanetHistoryState };
+type SpeciesSelector = { species: SpecieHistoryState };
+type FilmsSelector = { films: FilmHistoryState };
+type VehiclesSelector = { vehicles: VehicleHistoryState };
+type StarshipsSelector = { starships: StarshipHistoryState };
 
 const List: React.FC = () => {
-  const [data, setData] = useState<
-    Planets[] | Characters[] | Species[] | Films[] | Vehicles[] | Starships[]
-  >([]);
+  const [data, setData] = useState<All[]>([]);
   const [isSearch, setIsSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState('');
@@ -58,6 +63,18 @@ const List: React.FC = () => {
   );
   const characterSelector = useSelector<CharacterSelector, Characters[]>(
     ({ characters }) => characters.characters,
+  );
+  const specieSelector = useSelector<SpeciesSelector, Species[]>(
+    ({ species }) => species.species,
+  );
+  const filmSelector = useSelector<FilmsSelector, Films[]>(
+    ({ films }) => films.films,
+  );
+  const vehicleSelector = useSelector<VehiclesSelector, Vehicles[]>(
+    ({ vehicles }) => vehicles.vehicles,
+  );
+  const starshipSelector = useSelector<StarshipsSelector, Starships[]>(
+    ({ starships }) => starships.starships,
   );
 
   const ApiLoad = useCallback(async () => {
@@ -106,10 +123,9 @@ const List: React.FC = () => {
     if (router.params && nextPage) {
       (async () => {
         if (router.params.url) {
-          const result = await api.get(nextPage);
+          const result = await api.get<Response>(nextPage);
           const previousData = data?.slice();
-          previousData.push(result.data.results);
-          setData(previousData);
+          setData(previousData.concat(result.data.results));
           setNextPage(result.data.next);
           setIsLoading(false);
         }
@@ -150,444 +166,232 @@ const List: React.FC = () => {
         }}
       >
         <View style={styles.sessions}>
-          {router.params?.url === 'people' && (
-            <FlatList
-              overScrollMode="always"
-              ListHeaderComponent={() => (
-                <>
-                  {!isSearch && characterSelector.length > 0 && (
-                    <>
-                      <Sessions title="Recents" />
-                      <FlatList
-                        horizontal
-                        overScrollMode="always"
-                        data={characterSelector}
-                        renderItem={({ item }) => (
-                          <SquareCard
-                            type={{
-                              title: item.name,
-                              type: 'character',
-                              birthday: item.birth_year,
-                              gender: item.gender,
-                              height: item.height,
-                            }}
-                            onPress={() =>
-                              navigator.navigate('Details', {
-                                url: item.url,
+          <FlatList
+            overScrollMode="always"
+            ListHeaderComponent={() => (
+              <>
+                {!isSearch && (
+                  <>
+                    <Sessions title="Recents" />
+                    {router.params.type === 'character' &&
+                      characterSelector?.length > 0 && (
+                        <FlatList
+                          horizontal
+                          overScrollMode="always"
+                          data={characterSelector}
+                          renderItem={({ item }) => (
+                            <SquareCard
+                              type={{
+                                title: item.name,
                                 type: 'character',
-                              })
-                            }
-                          />
-                        )}
-                        keyExtractor={(item) => item.name}
-                        style={{ marginBottom: 20 }}
-                      />
-                      <Sessions title="All" />
-                    </>
-                  )}
-                </>
-              )}
-              data={data as Characters[]}
-              renderItem={({ item }) => (
-                <RectangularCard
-                  type={{
-                    title: item.name,
-                    type: 'character',
-                    birthday: item.birth_year,
-                    gender: item.gender,
-                    height: item.height,
-                    eyesColor: item.eye_color,
-                    skinColor: item.skin_color,
-                    weight: item.mass,
-                  }}
-                  onPress={() =>
-                    navigator.navigate('Details', {
-                      url: item.url,
-                      type: 'character',
-                    })
-                  }
-                />
-              )}
-              keyExtractor={(item) => item.name}
-              style={{ marginHorizontal: 5 }}
-              onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.3}
-              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
-              ListFooterComponent={() => (
-                <>
-                  {isLoading && (
-                    <>
-                      <Loading />
-                    </>
-                  )}
-                </>
-              )}
-            />
-          )}
-          {router.params?.url === 'planets' && (
-            <FlatList
-              overScrollMode="always"
-              ListHeaderComponent={() => (
-                <>
-                  {!isSearch && planetSelector?.length > 0 && (
-                    <>
-                      <Sessions title="Recents" />
+                                birthday: item.birth_year,
+                                gender: item.gender,
+                                height: item.height,
+                              }}
+                              onPress={() =>
+                                navigator.navigate('Details', {
+                                  url: item.url,
+                                  type: 'character',
+                                })
+                              }
+                            />
+                          )}
+                          keyExtractor={(item) => item.name}
+                          style={{ marginBottom: 20 }}
+                        />
+                      )}
+                    {router.params.type === 'planet' &&
+                      planetSelector?.length > 0 && (
+                        <FlatList
+                          horizontal
+                          overScrollMode="always"
+                          data={planetSelector}
+                          renderItem={({ item }) => (
+                            <SquareCard
+                              type={{
+                                title: item.name,
+                                type: 'planet',
+                                characters: item.residents?.length,
+                                climate: item.climate,
+                                population: item.population,
+                              }}
+                              onPress={() =>
+                                navigator.navigate('Details', {
+                                  url: item.url,
+                                  type: 'planet',
+                                })
+                              }
+                            />
+                          )}
+                          keyExtractor={(item) => item.name}
+                          style={{ marginBottom: 20 }}
+                        />
+                      )}
+                    {router.params.type === 'specie' &&
+                      specieSelector?.length > 0 && (
+                        <FlatList
+                          horizontal
+                          overScrollMode="always"
+                          data={specieSelector}
+                          renderItem={({ item }) => (
+                            <SquareCard
+                              type={{
+                                title: item.name,
+                                type: 'specie',
+                                averangeHeight: item.average_height,
+                                averangeLife: item.average_lifespan,
+                                language: item.language,
+                              }}
+                              onPress={() =>
+                                navigator.navigate('Details', {
+                                  url: item.url,
+                                  type: 'specie',
+                                })
+                              }
+                            />
+                          )}
+                          keyExtractor={(item) => item.name}
+                          style={{ marginBottom: 20 }}
+                        />
+                      )}
+                    {router.params.type === 'film' && filmSelector?.length > 0 && (
                       <FlatList
                         horizontal
                         overScrollMode="always"
-                        data={planetSelector}
+                        data={filmSelector}
                         renderItem={({ item }) => (
                           <SquareCard
                             type={{
-                              title: item.name,
-                              type: 'planet',
-                              characters: item.residents?.length,
-                              climate: item.climate,
-                              population: item.population,
+                              title: item.title,
+                              type: 'film',
+                              date: item.release_date,
+                              director: item.director,
+                              episode: item.episode_id,
                             }}
                             onPress={() =>
                               navigator.navigate('Details', {
                                 url: item.url,
-                                type: 'planet',
+                                type: 'film',
                               })
                             }
                           />
                         )}
-                        keyExtractor={(item) => item.name}
+                        keyExtractor={(item) => item.title}
                         style={{ marginBottom: 20 }}
                       />
-                      <Sessions title="All" />
-                    </>
-                  )}
-                </>
-              )}
-              data={data as Planets[]}
-              renderItem={({ item }) => (
-                <RectangularCard
-                  type={{
-                    title: item.name,
-                    type: 'planet',
-                    characters: item.residents.length,
-                    climate: item.climate,
-                    diameter: item.diameter,
-                    population: item.population,
-                    rotationPeriod: item.rotation_period,
-                    water: item.surface_water,
-                  }}
-                  onPress={() =>
-                    navigator.navigate('Details', {
-                      url: item.url,
-                      type: 'planet',
-                    })
-                  }
-                />
-              )}
-              onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.3}
-              ListFooterComponent={() => (
-                <>
-                  {isLoading && (
-                    <>
-                      <Loading />
-                    </>
-                  )}
-                </>
-              )}
-              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
-              keyExtractor={(item) => item.name}
-              style={{ marginHorizontal: 5 }}
-            />
-          )}
-          {router.params?.url === 'species' && (
-            <FlatList
-              overScrollMode="always"
-              ListHeaderComponent={() => (
-                <>
-                  {!isSearch && planetSelector?.length > 0 && (
-                    <>
-                      <Sessions title="Recents" />
-                      <FlatList
-                        horizontal
-                        overScrollMode="always"
-                        data={planetSelector}
-                        renderItem={({ item }) => (
-                          <SquareCard
-                            type={{
-                              title: item.name,
-                              type: 'planet',
-                              characters: item.residents?.length,
-                              climate: item.climate,
-                              population: item.population,
-                            }}
-                            onPress={() =>
-                              navigator.navigate('Details', {
-                                url: item.url,
-                                type: 'planet',
-                              })
-                            }
-                          />
-                        )}
-                        keyExtractor={(item) => item.name}
-                        style={{ marginBottom: 20 }}
-                      />
-                      <Sessions title="All" />
-                    </>
-                  )}
-                </>
-              )}
-              data={data as Species[]}
-              renderItem={({ item }) => (
-                <RectangularCard
-                  type={{
-                    title: item.name,
-                    type: 'specie',
-                    averangeHeight: item.average_height,
-                    averangeLife: item.average_lifespan,
-                    designation: item.designation,
-                    language: item.language,
-                    classification: item.classification,
-                  }}
-                  onPress={() =>
-                    navigator.navigate('Details', {
-                      url: item.url,
-                      type: 'specie',
-                    })
-                  }
-                />
-              )}
-              onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.3}
-              ListFooterComponent={() => (
-                <>
-                  {isLoading && (
-                    <>
-                      <Loading />
-                    </>
-                  )}
-                </>
-              )}
-              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
-              keyExtractor={(item) => item.name}
-              style={{ marginHorizontal: 5 }}
-            />
-          )}
-          {router.params?.url === 'films' && (
-            <FlatList
-              overScrollMode="always"
-              ListHeaderComponent={() => (
-                <>
-                  {!isSearch && planetSelector?.length > 0 && (
-                    <>
-                      <Sessions title="Recents" />
-                      <FlatList
-                        horizontal
-                        overScrollMode="always"
-                        data={planetSelector}
-                        renderItem={({ item }) => (
-                          <SquareCard
-                            type={{
-                              title: item.name,
-                              type: 'planet',
-                              characters: item.residents?.length,
-                              climate: item.climate,
-                              population: item.population,
-                            }}
-                            onPress={() =>
-                              navigator.navigate('Details', {
-                                url: item.url,
-                                type: 'planet',
-                              })
-                            }
-                          />
-                        )}
-                        keyExtractor={(item) => item.name}
-                        style={{ marginBottom: 20 }}
-                      />
-                      <Sessions title="All" />
-                    </>
-                  )}
-                </>
-              )}
-              data={data as Films[]}
-              renderItem={({ item }) => (
-                <RectangularCard
-                  type={{
-                    title: item.title,
-                    type: 'film',
-                    abstract: item.opening_crawl,
-                  }}
-                  onPress={() =>
-                    navigator.navigate('Details', {
-                      url: item.url,
-                      type: 'film',
-                    })
-                  }
-                />
-              )}
-              onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.3}
-              ListFooterComponent={() => (
-                <>
-                  {isLoading && (
-                    <>
-                      <Loading />
-                    </>
-                  )}
-                </>
-              )}
-              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
-              keyExtractor={(item) => item.name}
-              style={{ marginHorizontal: 5 }}
-            />
-          )}
-          {router.params?.url === 'vehicles' && (
-            <FlatList
-              overScrollMode="always"
-              ListHeaderComponent={() => (
-                <>
-                  {!isSearch && planetSelector?.length > 0 && (
-                    <>
-                      <Sessions title="Recents" />
-                      <FlatList
-                        horizontal
-                        overScrollMode="always"
-                        data={planetSelector}
-                        renderItem={({ item }) => (
-                          <SquareCard
-                            type={{
-                              title: item.name,
-                              type: 'planet',
-                              characters: item.residents?.length,
-                              climate: item.climate,
-                              population: item.population,
-                            }}
-                            onPress={() =>
-                              navigator.navigate('Details', {
-                                url: item.url,
-                                type: 'planet',
-                              })
-                            }
-                          />
-                        )}
-                        keyExtractor={(item) => item.name}
-                        style={{ marginBottom: 20 }}
-                      />
-                      <Sessions title="All" />
-                    </>
-                  )}
-                </>
-              )}
-              data={data as Vehicles[]}
-              renderItem={({ item }) => (
-                <RectangularCard
-                  type={{
-                    title: item.name,
-                    type: 'automobile',
-                    capacity: item.cargo_capacity,
-                    cost: item.cost_in_credits,
-                    crew: item.crew,
-                    lenght: item.length,
-                    passengers: item.passengers,
-                    speed: item.max_atmosphering_speed,
-                  }}
-                  onPress={() =>
-                    navigator.navigate('Details', {
-                      url: item.url,
-                      type: 'vehicle',
-                    })
-                  }
-                />
-              )}
-              onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.3}
-              ListFooterComponent={() => (
-                <>
-                  {isLoading && (
-                    <>
-                      <Loading />
-                    </>
-                  )}
-                </>
-              )}
-              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
-              keyExtractor={(item) => item.name}
-              style={{ marginHorizontal: 5 }}
-            />
-          )}
-          {router.params?.url === 'starships' && (
-            <FlatList
-              overScrollMode="always"
-              ListHeaderComponent={() => (
-                <>
-                  {!isSearch && planetSelector?.length > 0 && (
-                    <>
-                      <Sessions title="Recents" />
-                      <FlatList
-                        horizontal
-                        overScrollMode="always"
-                        data={planetSelector}
-                        renderItem={({ item }) => (
-                          <SquareCard
-                            type={{
-                              title: item.name,
-                              type: 'planet',
-                              characters: item.residents?.length,
-                              climate: item.climate,
-                              population: item.population,
-                            }}
-                            onPress={() =>
-                              navigator.navigate('Details', {
-                                url: item.url,
-                                type: 'planet',
-                              })
-                            }
-                          />
-                        )}
-                        keyExtractor={(item) => item.name}
-                        style={{ marginBottom: 20 }}
-                      />
-                      <Sessions title="All" />
-                    </>
-                  )}
-                </>
-              )}
-              data={data as Starships[]}
-              renderItem={({ item }) => (
-                <RectangularCard
-                  type={{
-                    title: item.name,
-                    type: 'automobile',
-                    capacity: item.cargo_capacity,
-                    cost: item.cost_in_credits,
-                    crew: item.crew,
-                    lenght: item.length,
-                    passengers: item.passengers,
-                    speed: item.max_atmosphering_speed,
-                  }}
-                  onPress={() =>
-                    navigator.navigate('Details', {
-                      url: item.url,
-                      type: 'starship',
-                    })
-                  }
-                />
-              )}
-              onEndReached={() => LoadNextPage()}
-              onEndReachedThreshold={0.3}
-              ListFooterComponent={() => (
-                <>
-                  {isLoading && (
-                    <>
-                      <Loading />
-                    </>
-                  )}
-                </>
-              )}
-              ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
-              keyExtractor={(item) => item.name}
-              style={{ marginHorizontal: 5 }}
-            />
-          )}
+                    )}
+                    {router.params.type === 'vehicle' &&
+                      vehicleSelector?.length > 0 && (
+                        <FlatList
+                          horizontal
+                          overScrollMode="always"
+                          data={vehicleSelector}
+                          renderItem={({ item }) => (
+                            <SquareCard
+                              type={{
+                                title: item.name,
+                                type: 'automobile',
+                                cost: item.cost_in_credits,
+                                crew: item.crew,
+                                passengers: item.passengers,
+                              }}
+                              onPress={() =>
+                                navigator.navigate('Details', {
+                                  url: item.url,
+                                  type: 'vehicle',
+                                })
+                              }
+                            />
+                          )}
+                          keyExtractor={(item) => item.name}
+                          style={{ marginBottom: 20 }}
+                        />
+                      )}
+                    {router.params.type === 'starship' &&
+                      starshipSelector?.length > 0 && (
+                        <FlatList
+                          horizontal
+                          overScrollMode="always"
+                          data={starshipSelector}
+                          renderItem={({ item }) => (
+                            <SquareCard
+                              type={{
+                                title: item.name,
+                                type: 'automobile',
+                                cost: item.cost_in_credits,
+                                crew: item.crew,
+                                passengers: item.passengers,
+                              }}
+                              onPress={() =>
+                                navigator.navigate('Details', {
+                                  url: item.url,
+                                  type: 'starship',
+                                })
+                              }
+                            />
+                          )}
+                          keyExtractor={(item) => item.name}
+                          style={{ marginBottom: 20 }}
+                        />
+                      )}
+                  </>
+                )}
+                <Sessions title="All" />
+              </>
+            )}
+            data={data}
+            renderItem={({ item }) => (
+              <RectangularCard
+                type={{
+                  title: item.name || item.title,
+                  birthday: item.birth_year,
+                  gender: item.gender,
+                  height: item.height,
+                  eyesColor: item.eye_color,
+                  skinColor: item.skin_color,
+                  weight: item.mass,
+                  abstract: item.opening_crawl,
+                  capacity: item.cargo_capacity,
+                  speed: item.max_atmosphering_speed,
+                  lenght: item.length,
+                  crew: item.crew,
+                  passengers: item.passengers,
+                  classification: item.classification,
+                  designation: item.designation,
+                  averangeLife: item.average_lifespan,
+                  averangeHeight: item.average_height,
+                  water: item.surface_water,
+                  diameter: item.diameter,
+                  characters: item.residents?.length,
+                  cost: item.cost_in_credits,
+                  climate: item.climate,
+                  language: item.language,
+                  population: item.population,
+                  rotationPeriod: item.rotation_period,
+                }}
+                onPress={() =>
+                  navigator.navigate('Details', {
+                    url: item.url,
+                    type: router.params?.type,
+                  })
+                }
+              />
+            )}
+            keyExtractor={(item) => item.name ?? item.title}
+            style={{ marginHorizontal: 5 }}
+            onEndReached={() => LoadNextPage()}
+            onEndReachedThreshold={0.3}
+            ListFooterComponentStyle={{ marginTop: 20, height: 100 }}
+            ListFooterComponent={() => (
+              <>
+                {isLoading && (
+                  <>
+                    <Loading />
+                  </>
+                )}
+              </>
+            )}
+          />
         </View>
       </ImageBackground>
     </View>

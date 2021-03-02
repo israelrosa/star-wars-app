@@ -4,47 +4,26 @@ import React, { memo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { fonts, theme } from '../../theme';
 
-interface Character {
+interface Types {
   title: string;
-  type: 'character';
   gender: string;
   birthday: string;
   height: string;
   weight: string;
   eyesColor: string;
   skinColor: string;
-}
-
-interface Planets {
-  title: string;
-  type: 'planet';
   population: string;
   characters: number;
   climate: string;
   rotationPeriod: string;
   diameter: string;
   water: string;
-}
-
-interface Specie {
-  title: string;
-  type: 'specie';
   language: string;
   averangeLife: string;
   averangeHeight: string;
   classification: string;
   designation: string;
-}
-
-interface Film {
-  title: string;
-  type: 'film';
   abstract: string;
-}
-
-interface Automobiles {
-  title: string;
-  type: 'automobile';
   cost: string;
   passengers: string;
   crew: string;
@@ -53,7 +32,7 @@ interface Automobiles {
   lenght: string;
 }
 interface CardProps {
-  type: Character | Planets | Specie | Film | Automobiles;
+  type: Types;
   onPress: () => void | undefined;
 }
 
@@ -83,235 +62,255 @@ const RectangularCard: React.FC<CardProps> = ({ type, onPress }) => {
           <Ionicons name="chevron-forward-outline" size={25} color="white" />
         </View>
         <View style={styles.content}>
-          {type.type === 'character' && (
-            <>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="male-female-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.gender}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="calendar-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.birthday}</Text>
-                </View>
-              </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="code-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                    style={{ transform: [{ rotateZ: '90deg' }] }}
-                  />
-                  <Text style={styles.detailsText}>{type.height}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="barbell-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.weight}</Text>
-                </View>
-              </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="eye-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.eyesColor}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="color-palette-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.skinColor}</Text>
-                </View>
-              </View>
-            </>
+          {type.abstract && (
+            <Text
+              numberOfLines={5}
+              style={{ color: 'white', flex: 1, fontFamily: fonts.osw }}
+            >
+              {type.abstract}
+            </Text>
           )}
-          {type.type === 'planet' && (
-            <>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="people-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.population}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="man-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.characters}</Text>
-                </View>
+
+          <View>
+            {type.gender && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="male-female-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.gender}</Text>
               </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="reload-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.rotationPeriod}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="resize-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.diameter}</Text>
-                </View>
+            )}
+            {type.birthday && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="calendar-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.birthday}</Text>
               </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="water-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.water}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="cloud-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.climate}</Text>
-                </View>
+            )}
+            {type.population && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="people-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.population}</Text>
               </View>
-            </>
-          )}
-          {type.type === 'specie' && (
-            <>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="language-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.language}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="code-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                    style={{ transform: [{ rotateZ: '90deg' }] }}
-                  />
-                  <Text style={styles.detailsText}>{type.averangeHeight}</Text>
-                </View>
+            )}
+            {type.characters !== undefined && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="man-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.characters}</Text>
               </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="heart-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.averangeLife}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="briefcase-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.designation}</Text>
-                </View>
+            )}
+            {type.language && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="language-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.language}</Text>
               </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="paw-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.classification}</Text>
-                </View>
+            )}
+            {type.averangeHeight && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="code-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                  style={{ transform: [{ rotateZ: '90deg' }] }}
+                />
+                <Text style={styles.detailsText}>{type.averangeHeight}</Text>
               </View>
-            </>
-          )}
-          {type.type === 'film' && (
-            <Text numberOfLines={5}>{type.abstract}</Text>
-          )}
-          {type.type === 'automobile' && (
-            <>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="people-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.passengers}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="briefcase-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.crew}</Text>
-                </View>
+            )}
+            {type.passengers && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="people-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.passengers}</Text>
               </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="pricetag-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.cost}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="code-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.lenght}</Text>
-                </View>
+            )}
+            {type.crew && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="briefcase-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.crew}</Text>
               </View>
-              <View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="speedometer-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.speed}</Text>
-                </View>
-                <View style={styles.details}>
-                  <Ionicons
-                    name="expand-outline"
-                    size={iconSize}
-                    color={theme.primary}
-                  />
-                  <Text style={styles.detailsText}>{type.capacity}</Text>
-                </View>
+            )}
+          </View>
+
+          <View>
+            {type.height && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="code-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                  style={{ transform: [{ rotateZ: '90deg' }] }}
+                />
+                <Text style={styles.detailsText}>{type.height}</Text>
               </View>
-            </>
-          )}
+            )}
+            {type.weight && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="barbell-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.weight}</Text>
+              </View>
+            )}
+            {type.rotationPeriod && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="reload-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.rotationPeriod}</Text>
+              </View>
+            )}
+            {type.diameter && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="resize-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.diameter}</Text>
+              </View>
+            )}
+            {type.averangeLife && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="heart-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.averangeLife}</Text>
+              </View>
+            )}
+            {type.designation && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="briefcase-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.designation}</Text>
+              </View>
+            )}
+            {type.cost && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="pricetag-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.cost}</Text>
+              </View>
+            )}
+            {type.lenght && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="code-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.lenght}</Text>
+              </View>
+            )}
+          </View>
+
+          <View>
+            {type.eyesColor && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="eye-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.eyesColor}</Text>
+              </View>
+            )}
+            {type.skinColor && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="color-palette-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.skinColor}</Text>
+              </View>
+            )}
+            {type.water && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="water-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.water}</Text>
+              </View>
+            )}
+            {type.climate && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="cloud-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.climate}</Text>
+              </View>
+            )}
+            {type.classification && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="paw-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.classification}</Text>
+              </View>
+            )}
+            {type.speed && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="speedometer-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.speed}</Text>
+              </View>
+            )}
+            {type.capacity && (
+              <View style={styles.details}>
+                <Ionicons
+                  name="expand-outline"
+                  size={iconSize}
+                  color={theme.primary}
+                />
+                <Text style={styles.detailsText}>{type.capacity}</Text>
+              </View>
+            )}
+          </View>
         </View>
       </View>
     </TouchableHighlight>
