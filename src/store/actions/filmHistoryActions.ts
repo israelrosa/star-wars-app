@@ -1,7 +1,7 @@
 import Films from '../../interfaces/Films';
 import { FilmHistoryActions, ADD_FILM_HISTORY } from '../types/filmTypes';
 
-export function AddCharacterHistoryAction({
+export function AddFilmHistoryAction({
   characters,
   director,
   episode_id,

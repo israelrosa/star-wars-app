@@ -4,7 +4,7 @@ import {
   ADD_STARSHIP_HISTORY,
 } from '../types/starshipTypes';
 
-export function AddCharacterHistoryAction({
+export function AddStarshipHistoryAction({
   films,
   name,
   url,

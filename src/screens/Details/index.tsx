@@ -1,5 +1,5 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { WindupChildren } from 'windups';
 import {
   Dimensions,
@@ -10,7 +10,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DetailCard from '../../components/DetailCard';
 import DetailContent from '../../components/DetailContent';
 import Header from '../../components/Header';
@@ -19,6 +19,22 @@ import { AddCharacterHistoryAction } from '../../store/actions/characterHistoryA
 import { AddPlanetHistoryAction } from '../../store/actions/planetHistoryActions';
 import { fonts, theme } from '../../theme';
 import All from '../../interfaces/All';
+import { AddFilmHistoryAction } from '../../store/actions/filmHistoryActions';
+import { AddSpecieHistoryAction } from '../../store/actions/specieHistoryActions';
+import { AddStarshipHistoryAction } from '../../store/actions/starshipsHistoryActions';
+import { AddVehicleHistoryAction } from '../../store/actions/vehicleHistoryActions';
+import { CharacterHistoryState } from '../../store/types/characterTypes';
+import { PlanetHistoryState } from '../../store/types/planetTypes';
+import { SpecieHistoryState } from '../../store/types/specieTypes';
+import { FilmHistoryState } from '../../store/types/filmTypes';
+import { VehicleHistoryState } from '../../store/types/vehicleTypes';
+import { StarshipHistoryState } from '../../store/types/starshipTypes';
+import Planets from '../../interfaces/Planets';
+import Characters from '../../interfaces/Characters';
+import Species from '../../interfaces/Species';
+import Films from '../../interfaces/Films';
+import Vehicles from '../../interfaces/Vehicles';
+import Starships from '../../interfaces/Starships';
 
 type RootParams = {
   Detail: {
@@ -27,6 +43,13 @@ type RootParams = {
   };
 };
 
+type CharacterSelector = { characters: CharacterHistoryState };
+type PlanetsSelector = { planets: PlanetHistoryState };
+type SpeciesSelector = { species: SpecieHistoryState };
+type FilmsSelector = { films: FilmHistoryState };
+type VehiclesSelector = { vehicles: VehicleHistoryState };
+type StarshipsSelector = { starships: StarshipHistoryState };
+
 type RouterParams = RouteProp<RootParams, 'Detail'>;
 
 const Details: React.FC = () => {
@@ -34,20 +57,149 @@ const Details: React.FC = () => {
   const navigator = useNavigation();
   const router = useRoute<RouterParams>();
   const dispatch = useDispatch();
+  const planetSelector = useSelector<PlanetsSelector, Planets[]>(
+    ({ planets }) => planets.planets,
+  );
+  const characterSelector = useSelector<CharacterSelector, Characters[]>(
+    ({ characters }) => characters.characters,
+  );
+  const specieSelector = useSelector<SpeciesSelector, Species[]>(
+    ({ species }) => species.species,
+  );
+  const filmSelector = useSelector<FilmsSelector, Films[]>(
+    ({ films }) => films.films,
+  );
+  const vehicleSelector = useSelector<VehiclesSelector, Vehicles[]>(
+    ({ vehicles }) => vehicles.vehicles,
+  );
+  const starshipSelector = useSelector<StarshipsSelector, Starships[]>(
+    ({ starships }) => starships.starships,
+  );
+
+  const ApiLoad = useCallback(async () => {
+    const result = await api.get<All>(router.params.url);
+    setDetail(result.data);
+    switch (router.params.type) {
+      case 'character':
+        dispatch(AddCharacterHistoryAction(result.data));
+        break;
+      case 'film':
+        dispatch(AddFilmHistoryAction(result.data));
+        break;
+      case 'planet':
+        dispatch(AddPlanetHistoryAction(result.data));
+        break;
+      case 'specie':
+        dispatch(AddSpecieHistoryAction(result.data));
+        break;
+      case 'starship':
+        dispatch(AddStarshipHistoryAction(result.data));
+        break;
+      case 'vehicle':
+        dispatch(AddVehicleHistoryAction(result.data));
+        break;
+      default:
+        break;
+    }
+  }, [router.params.url, router.params.type, dispatch]);
+
+  const StorageLoad = useCallback((): boolean => {
+    if (router.params) {
+      if (router.params.type === 'character') {
+        const character = characterSelector.find(
+          (ch) => ch.url === router.params.url,
+        );
+
+        if (character) {
+          setDetail(character as All);
+          return true;
+        }
+        return false;
+      }
+      if (router.params.type === 'planet') {
+        const planet = planetSelector.find(
+          (pl) => pl.url === router.params.url,
+        );
+
+        if (planet) {
+          setDetail(planet as All);
+          return true;
+        }
+        return false;
+      }
+      if (router.params.type === 'specie') {
+        const specie = specieSelector.find(
+          (sp) => sp.url === router.params.url,
+        );
+
+        if (specie) {
+          setDetail(specie as All);
+          return true;
+        }
+        return false;
+      }
+      if (router.params.type === 'film') {
+        const film = filmSelector.find((flm) => flm.url === router.params.url);
+
+        if (film) {
+          setDetail(film as All);
+          return true;
+        }
+        return false;
+      }
+      if (router.params.type === 'starship') {
+        const starship = starshipSelector.find(
+          (ssp) => ssp.url === router.params.url,
+        );
+
+        if (starship) {
+          setDetail(starship as All);
+          return true;
+        }
+        return false;
+      }
+      if (router.params.type === 'vehicle') {
+        const vehicle = vehicleSelector.find(
+          (vh) => vh.url === router.params.url,
+        );
+
+        if (vehicle) {
+          setDetail(vehicle as All);
+          return true;
+        }
+        return false;
+      }
+      if (router.params.type === 'character') {
+        const character = characterSelector.find(
+          (ch) => ch.url === router.params.url,
+        );
+
+        if (character) {
+          setDetail(character as All);
+          return true;
+        }
+        return false;
+      }
+    }
+    return false;
+  }, [
+    characterSelector,
+    vehicleSelector,
+    specieSelector,
+    starshipSelector,
+    planetSelector,
+    filmSelector,
+    router.params,
+  ]);
 
   useEffect(() => {
     let isUnmounted = false;
-    router.params &&
-      !isUnmounted &&
-      (async () => {
-        const result = await api.get<All>(router.params.url);
-        setDetail(result.data);
-      })();
+    router.params && !isUnmounted && !StorageLoad() && ApiLoad();
 
     return () => {
       isUnmounted = true;
     };
-  }, [router.params, router.params.url, dispatch]);
+  }, [ApiLoad, StorageLoad, router.params]);
 
   return (
     <View style={styles.container}>

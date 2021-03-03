@@ -1,7 +1,7 @@
 import Species from '../../interfaces/Species';
 import { SpecieHistoryActions, ADD_SPECIE_HISTORY } from '../types/specieTypes';
 
-export function AddCharacterHistoryAction({
+export function AddSpecieHistoryAction({
   average_height,
   url,
   skin_colors,

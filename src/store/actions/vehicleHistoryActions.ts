@@ -4,7 +4,7 @@ import {
   ADD_VEHICLE_HISTORY,
 } from '../types/vehicleTypes';
 
-export function AddCharacterHistoryAction({
+export function AddVehicleHistoryAction({
   films,
   name,
   url,
