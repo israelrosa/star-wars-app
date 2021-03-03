@@ -40,8 +40,11 @@ const DetailContent: React.FC<Props> = ({ url, navigate, type }) => {
     <TouchableHighlight
       style={{
         alignItems: 'center',
-        marginVertical: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
       }}
+      onPress={() => navigate && navigator.navigate('Details', { url, type })}
     >
       {data ? (
         <View
@@ -69,16 +72,11 @@ const DetailContent: React.FC<Props> = ({ url, navigate, type }) => {
             </Text>
           </View>
           {navigate && (
-            <Ionicons
-              name="chevron-forward-outline"
-              size={25}
-              color="white"
-              onPress={() => navigator.navigate('Details', { url, type })}
-            />
+            <Ionicons name="chevron-forward-outline" size={25} color="white" />
           )}
         </View>
       ) : (
-        <Loading style={{ transform: [{ scale: 0.8 }] }} />
+        <Loading style={{ transform: [{ scale: 0.6 }] }} />
       )}
     </TouchableHighlight>
   );

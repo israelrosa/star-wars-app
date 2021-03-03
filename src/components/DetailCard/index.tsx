@@ -46,9 +46,7 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    marginVertical: 10,
-    marginHorizontal: 15,
-    justifyContent: 'space-between',
+    width: '100%',
   },
 
   details: {
