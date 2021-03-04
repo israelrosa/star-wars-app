@@ -13,7 +13,7 @@ import Header from '../../components/Header';
 import Loading from '../../components/Loading';
 import RectangularCard from '../../components/RectangularCard';
 import Sessions from '../../components/Sessions';
-import SquareCard from '../../components/SquareCard';
+import StoreList from '../../components/StoreList';
 import All from '../../interfaces/All';
 import Characters from '../../interfaces/Characters';
 import Films from '../../interfaces/Films';
@@ -172,166 +172,43 @@ const List: React.FC = () => {
               <>
                 {!isSearch && (
                   <>
-                    <Sessions title="Recents" />
                     {router.params.type === 'character' &&
                       characterSelector?.length > 0 && (
-                        <FlatList
-                          horizontal
-                          overScrollMode="always"
-                          data={characterSelector}
-                          renderItem={({ item }) => (
-                            <SquareCard
-                              type={{
-                                title: item.name,
-                                type: 'character',
-                                birthday: item.birth_year,
-                                gender: item.gender,
-                                height: item.height,
-                              }}
-                              onPress={() =>
-                                navigator.navigate('Details', {
-                                  url: item.url,
-                                  type: 'character',
-                                })
-                              }
-                            />
-                          )}
-                          keyExtractor={(item) => item.name}
-                          style={{ marginBottom: 20 }}
+                        <StoreList
+                          data={characterSelector as All[]}
+                          type="character"
                         />
                       )}
                     {router.params.type === 'planet' &&
                       planetSelector?.length > 0 && (
-                        <FlatList
-                          horizontal
-                          overScrollMode="always"
-                          data={planetSelector}
-                          renderItem={({ item }) => (
-                            <SquareCard
-                              type={{
-                                title: item.name,
-                                type: 'planet',
-                                characters: item.residents?.length,
-                                climate: item.climate,
-                                population: item.population,
-                              }}
-                              onPress={() =>
-                                navigator.navigate('Details', {
-                                  url: item.url,
-                                  type: 'planet',
-                                })
-                              }
-                            />
-                          )}
-                          keyExtractor={(item) => item.name}
-                          style={{ marginBottom: 20 }}
+                        <StoreList
+                          data={planetSelector as All[]}
+                          type="planet"
                         />
                       )}
                     {router.params.type === 'specie' &&
                       specieSelector?.length > 0 && (
-                        <FlatList
-                          horizontal
-                          overScrollMode="always"
-                          data={specieSelector}
-                          renderItem={({ item }) => (
-                            <SquareCard
-                              type={{
-                                title: item.name,
-                                type: 'specie',
-                                averangeHeight: item.average_height,
-                                averangeLife: item.average_lifespan,
-                                language: item.language,
-                              }}
-                              onPress={() =>
-                                navigator.navigate('Details', {
-                                  url: item.url,
-                                  type: 'specie',
-                                })
-                              }
-                            />
-                          )}
-                          keyExtractor={(item) => item.name}
-                          style={{ marginBottom: 20 }}
+                        <StoreList
+                          data={specieSelector as All[]}
+                          type="specie"
                         />
                       )}
-                    {router.params.type === 'film' && filmSelector?.length > 0 && (
-                      <FlatList
-                        horizontal
-                        overScrollMode="always"
-                        data={filmSelector}
-                        renderItem={({ item }) => (
-                          <SquareCard
-                            type={{
-                              title: item.title,
-                              type: 'film',
-                              date: item.release_date,
-                              director: item.director,
-                              episode: item.episode_id,
-                            }}
-                            onPress={() =>
-                              navigator.navigate('Details', {
-                                url: item.url,
-                                type: 'film',
-                              })
-                            }
-                          />
-                        )}
-                        keyExtractor={(item) => item.title}
-                        style={{ marginBottom: 20 }}
-                      />
-                    )}
+                    {router.params.type === 'film' &&
+                      filmSelector?.length > 0 && (
+                        <StoreList data={filmSelector as All[]} type="film" />
+                      )}
                     {router.params.type === 'vehicle' &&
                       vehicleSelector?.length > 0 && (
-                        <FlatList
-                          horizontal
-                          overScrollMode="always"
-                          data={vehicleSelector}
-                          renderItem={({ item }) => (
-                            <SquareCard
-                              type={{
-                                title: item.name,
-                                type: 'automobile',
-                                cost: item.cost_in_credits,
-                                crew: item.crew,
-                                passengers: item.passengers,
-                              }}
-                              onPress={() =>
-                                navigator.navigate('Details', {
-                                  url: item.url,
-                                  type: 'vehicle',
-                                })
-                              }
-                            />
-                          )}
-                          keyExtractor={(item) => item.name}
-                          style={{ marginBottom: 20 }}
+                        <StoreList
+                          data={vehicleSelector as All[]}
+                          type="vehicle"
                         />
                       )}
                     {router.params.type === 'starship' &&
                       starshipSelector?.length > 0 && (
-                        <FlatList
-                          horizontal
-                          overScrollMode="always"
-                          data={starshipSelector}
-                          renderItem={({ item }) => (
-                            <SquareCard
-                              type={{
-                                title: item.name,
-                                type: 'automobile',
-                                cost: item.cost_in_credits,
-                                crew: item.crew,
-                                passengers: item.passengers,
-                              }}
-                              onPress={() =>
-                                navigator.navigate('Details', {
-                                  url: item.url,
-                                  type: 'starship',
-                                })
-                              }
-                            />
-                          )}
-                          keyExtractor={(item) => item.name}
-                          style={{ marginBottom: 20 }}
+                        <StoreList
+                          data={starshipSelector as All[]}
+                          type="starship"
                         />
                       )}
                   </>

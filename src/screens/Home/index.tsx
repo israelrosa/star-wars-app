@@ -5,7 +5,6 @@ import {
   StyleSheet,
   View,
   ImageBackground,
-  StatusBar,
   Dimensions,
   Animated,
   NativeScrollEvent,
@@ -29,6 +28,7 @@ import Species from '../../interfaces/Species';
 import Films from '../../interfaces/Films';
 import Vehicles from '../../interfaces/Vehicles';
 import Starships from '../../interfaces/Starships';
+import All from '../../interfaces/All';
 
 interface ResponsePlanets {
   results: Planets[];
@@ -175,13 +175,7 @@ const Home: React.FC = () => {
                       data={characters}
                       renderItem={({ item }) => (
                         <SquareCard
-                          type={{
-                            title: item.name,
-                            type: 'character',
-                            birthday: item.birth_year,
-                            gender: item.gender,
-                            height: item.height,
-                          }}
+                          data={item as All}
                           onPress={() =>
                             navigator.navigate('Details', {
                               url: item.url,
@@ -258,13 +252,7 @@ const Home: React.FC = () => {
                       data={planets}
                       renderItem={({ item }) => (
                         <SquareCard
-                          type={{
-                            title: item.name,
-                            type: 'planet',
-                            climate: item.climate,
-                            population: item.population,
-                            characters: item.residents.length,
-                          }}
+                          data={item as All}
                           onPress={() =>
                             navigator.navigate('Details', {
                               url: item.url,
@@ -341,13 +329,7 @@ const Home: React.FC = () => {
                       data={species}
                       renderItem={({ item }) => (
                         <SquareCard
-                          type={{
-                            title: item.name,
-                            type: 'specie',
-                            language: item.language,
-                            averangeLife: item.average_lifespan,
-                            averangeHeight: item.average_height,
-                          }}
+                          data={item as All}
                           onPress={() =>
                             navigator.navigate('Details', {
                               url: item.url,
@@ -393,7 +375,7 @@ const Home: React.FC = () => {
               <ImageBackground
                 source={require('../../../assets/images/home/films.jpg')}
                 style={styles.otherBackgrounds}
-                imageStyle={{ height: '80%' }}
+                imageStyle={{ height: '95%' }}
               >
                 <LinearGradient
                   colors={[theme.black, 'rgba(18,18,18,0.1)', theme.black]}
@@ -424,13 +406,7 @@ const Home: React.FC = () => {
                       data={films}
                       renderItem={({ item }) => (
                         <SquareCard
-                          type={{
-                            title: item.title,
-                            type: 'film',
-                            director: item.director,
-                            episode: item.episode_id,
-                            date: item.release_date,
-                          }}
+                          data={item as All}
                           onPress={() =>
                             navigator.navigate('Details', {
                               url: item.url,
@@ -507,13 +483,7 @@ const Home: React.FC = () => {
                       data={vehicles}
                       renderItem={({ item }) => (
                         <SquareCard
-                          type={{
-                            title: item.name,
-                            type: 'automobile',
-                            cost: item.cost_in_credits,
-                            passengers: item.passengers,
-                            crew: item.crew,
-                          }}
+                          data={item as All}
                           onPress={() =>
                             navigator.navigate('Details', {
                               url: item.url,
@@ -590,13 +560,7 @@ const Home: React.FC = () => {
                       data={starships}
                       renderItem={({ item }) => (
                         <SquareCard
-                          type={{
-                            title: item.name,
-                            type: 'automobile',
-                            cost: item.cost_in_credits,
-                            passengers: item.passengers,
-                            crew: item.crew,
-                          }}
+                          data={item as All}
                           onPress={() =>
                             navigator.navigate('Details', {
                               url: item.url,

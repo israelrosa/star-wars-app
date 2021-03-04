@@ -3,51 +3,16 @@ import React from 'react';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { StyleSheet, Text, View } from 'react-native';
 import { fonts, theme } from '../../theme';
-
-interface Character {
-  title: string;
-  type: 'character';
-  height: string;
-  gender: string;
-  birthday: string;
-}
-interface Planet {
-  title: string;
-  type: 'planet';
-  population: string;
-  characters: number;
-  climate: string;
-}
-interface Specie {
-  title: string;
-  type: 'specie';
-  language: string;
-  averangeLife: string;
-  averangeHeight: string;
-}
-interface Film {
-  title: string;
-  type: 'film';
-  director: string;
-  episode: number;
-  date: string;
-}
-interface Automobiles {
-  title: string;
-  type: 'automobile';
-  cost: string;
-  passengers: string;
-  crew: string;
-}
+import All from '../../interfaces/All';
 
 interface CardProps {
-  type: Character | Planet | Specie | Film | Automobiles;
+  data: All;
   onPress: () => void | undefined;
 }
 
 const iconSize = 20;
 
-const SquareCard: React.FC<CardProps> = ({ type, onPress }) => {
+const SquareCard: React.FC<CardProps> = ({ data, onPress }) => {
   return (
     <TouchableHighlight style={styles.container} onPress={onPress}>
       <View>
@@ -59,156 +24,166 @@ const SquareCard: React.FC<CardProps> = ({ type, onPress }) => {
               color: theme.primary,
             }}
           >
-            {type.title}
+            {data.title || data.name}
           </Text>
           <Text
             style={{ fontFamily: fonts.bebas, fontSize: 24, color: 'white' }}
           >
-            {type.title}
+            {data.name || data.title}
           </Text>
         </View>
         <View style={styles.content}>
-          {type.type === 'character' && (
-            <>
-              <View style={styles.details}>
-                <Ionicons
-                  name="code-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                  style={{ transform: [{ rotateZ: '90deg' }] }}
-                />
-                <Text style={styles.detailsText}>{type.height}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="male-female-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.gender}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="calendar-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.birthday}</Text>
-              </View>
-            </>
+          {data.height && (
+            <View style={styles.details}>
+              <Ionicons
+                name="code-outline"
+                size={iconSize}
+                color={theme.primary}
+                style={{ transform: [{ rotateZ: '90deg' }] }}
+              />
+              <Text style={styles.detailsText}>{data.height}</Text>
+            </View>
           )}
-          {type.type === 'planet' && (
-            <>
-              <View style={styles.details}>
-                <Ionicons
-                  name="people-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.population}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="man-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.characters}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="cloud-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.climate}</Text>
-              </View>
-            </>
+          {data.gender && (
+            <View style={styles.details}>
+              <Ionicons
+                name="male-female-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.gender}</Text>
+            </View>
           )}
-          {type.type === 'specie' && (
-            <>
-              <View style={styles.details}>
-                <Ionicons
-                  name="language-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.language}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="heart-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.averangeLife}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="code-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                  style={{ transform: [{ rotateZ: '90deg' }] }}
-                />
-                <Text style={styles.detailsText}>{type.averangeHeight}</Text>
-              </View>
-            </>
+          {data.birth_year && (
+            <View style={styles.details}>
+              <Ionicons
+                name="calendar-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.birth_year}</Text>
+            </View>
           )}
-          {type.type === 'film' && (
-            <>
-              <View style={styles.details}>
-                <Ionicons
-                  name="clipboard-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.director}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="albums-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.episode}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="calendar-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.date}</Text>
-              </View>
-            </>
+          {data.population && (
+            <View style={styles.details}>
+              <Ionicons
+                name="people-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.population}</Text>
+            </View>
           )}
-          {type.type === 'automobile' && (
-            <>
-              <View style={styles.details}>
-                <Ionicons
-                  name="pricetag-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.cost}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="people-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.passengers}</Text>
-              </View>
-              <View style={styles.details}>
-                <Ionicons
-                  name="briefcase-outline"
-                  size={iconSize}
-                  color={theme.primary}
-                />
-                <Text style={styles.detailsText}>{type.crew}</Text>
-              </View>
-            </>
+          {data.residents && (
+            <View style={styles.details}>
+              <Ionicons
+                name="man-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.residents.length}</Text>
+            </View>
+          )}
+          {data.climate && (
+            <View style={styles.details}>
+              <Ionicons
+                name="cloud-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.climate}</Text>
+            </View>
+          )}
+          {data.language && (
+            <View style={styles.details}>
+              <Ionicons
+                name="language-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.language}</Text>
+            </View>
+          )}
+          {data.average_lifespan && (
+            <View style={styles.details}>
+              <Ionicons
+                name="heart-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.average_lifespan}</Text>
+            </View>
+          )}
+          {data.average_height && (
+            <View style={styles.details}>
+              <Ionicons
+                name="code-outline"
+                size={iconSize}
+                color={theme.primary}
+                style={{ transform: [{ rotateZ: '90deg' }] }}
+              />
+              <Text style={styles.detailsText}>{data.average_height}</Text>
+            </View>
+          )}
+          {data.director && (
+            <View style={styles.details}>
+              <Ionicons
+                name="clipboard-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.director}</Text>
+            </View>
+          )}
+          {data.episode_id && (
+            <View style={styles.details}>
+              <Ionicons
+                name="albums-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.episode_id}</Text>
+            </View>
+          )}
+          {data.release_date && (
+            <View style={styles.details}>
+              <Ionicons
+                name="calendar-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.release_date}</Text>
+            </View>
+          )}
+          {data.cost_in_credits && (
+            <View style={styles.details}>
+              <Ionicons
+                name="pricetag-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.cost_in_credits}</Text>
+            </View>
+          )}
+          {data.passengers && (
+            <View style={styles.details}>
+              <Ionicons
+                name="people-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.passengers}</Text>
+            </View>
+          )}
+          {data.crew && (
+            <View style={styles.details}>
+              <Ionicons
+                name="briefcase-outline"
+                size={iconSize}
+                color={theme.primary}
+              />
+              <Text style={styles.detailsText}>{data.crew}</Text>
+            </View>
           )}
         </View>
       </View>
