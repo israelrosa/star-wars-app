@@ -31,6 +31,7 @@ const StoreList: React.FC<Props> = ({ data, type }) => {
             }
           />
         )}
+        keyExtractor={(item) => item.name || item.title}
       />
     </View>
   );
