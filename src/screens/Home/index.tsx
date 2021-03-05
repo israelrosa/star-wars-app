@@ -135,7 +135,7 @@ const Home: React.FC = () => {
           <Header disableSearch />
           <ScrollView
             onScroll={(e) => HandleScroll(e)}
-            decelerationRate={0.7}
+            decelerationRate={0.99}
             snapToAlignment="end"
             snapToInterval={screenHeight / 2}
           >

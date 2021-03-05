@@ -29,8 +29,10 @@
       "favicon": "./assets/Adaptive-icon.png"
     },
     "androidNavigationBar": {
-      "barStyle":"light-content",
+      "barStyle": "light-content",
       "backgroundColor": "#121212"
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/israelrosa/star-wars-app"
   }
 }
