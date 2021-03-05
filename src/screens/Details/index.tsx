@@ -78,30 +78,36 @@ const Details: React.FC = () => {
   );
 
   const ApiLoad = useCallback(async () => {
+    let isUnmounted = false;
     const result = await api.get<All>(router.params.url);
-    setDetail(result.data);
-    switch (router.params.type) {
-      case 'character':
-        dispatch(AddCharacterHistoryAction(result.data));
-        break;
-      case 'film':
-        dispatch(AddFilmHistoryAction(result.data));
-        break;
-      case 'planet':
-        dispatch(AddPlanetHistoryAction(result.data));
-        break;
-      case 'specie':
-        dispatch(AddSpecieHistoryAction(result.data));
-        break;
-      case 'starship':
-        dispatch(AddStarshipHistoryAction(result.data));
-        break;
-      case 'vehicle':
-        dispatch(AddVehicleHistoryAction(result.data));
-        break;
-      default:
-        break;
+    if (!isUnmounted) {
+      setDetail(result.data);
+      switch (router.params.type) {
+        case 'character':
+          dispatch(AddCharacterHistoryAction(result.data));
+          break;
+        case 'film':
+          dispatch(AddFilmHistoryAction(result.data));
+          break;
+        case 'planet':
+          dispatch(AddPlanetHistoryAction(result.data));
+          break;
+        case 'specie':
+          dispatch(AddSpecieHistoryAction(result.data));
+          break;
+        case 'starship':
+          dispatch(AddStarshipHistoryAction(result.data));
+          break;
+        case 'vehicle':
+          dispatch(AddVehicleHistoryAction(result.data));
+          break;
+        default:
+          break;
+      }
     }
+    return () => {
+      isUnmounted = true;
+    };
   }, [router.params.url, router.params.type, dispatch]);
 
   const StorageLoad = useCallback((): boolean => {
