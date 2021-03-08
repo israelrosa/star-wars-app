@@ -144,17 +144,17 @@ const List: React.FC = () => {
       />
       <ImageBackground
         source={
-          (router.params?.type === 'characters' &&
+          (router.params?.type === 'character' &&
             require('../../../assets/images/list/characters.jpg')) ||
-          (router.params?.title === 'Planets' &&
+          (router.params?.type === 'planet' &&
             require('../../../assets/images/list/planets.jpg')) ||
-          (router.params?.title === 'Species' &&
+          (router.params?.type === 'specie' &&
             require('../../../assets/images/list/species.jpg')) ||
-          (router.params?.title === 'Films' &&
+          (router.params?.type === 'film' &&
             require('../../../assets/images/list/films.jpg')) ||
-          (router.params?.title === 'vehicles' &&
+          (router.params?.type === 'vehicle' &&
             require('../../../assets/images/list/vehicles.jpg')) ||
-          (router.params?.title === 'Starships' &&
+          (router.params?.type === 'starship' &&
             require('../../../assets/images/list/starships.jpg'))
         }
         style={styles.ImageBackground}
