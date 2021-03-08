@@ -7,8 +7,8 @@
 </p>
 
 ## About
-It's an expo mobile app that I made for a vacancy, in it, I used the star wars api ( [SWAPI](https://swapi.dev/) ) to fetch data and redux to persist it. I learned some
-animations from the animated library, with it, I made a loading animation to honor the game Star Wars Battlefront II and other cool things like an 
+It's an expo mobile app that I made for a vacancy. I used the star wars api ( [SWAPI](https://swapi.dev/) ) to fetch data and redux to persist it. I learned some
+animations from the animated library that I used to made a loading animation to honor the game Star Wars Battlefront II and other cool things like an 
 animated scroll. I made it all in 2 weeks, I hope you like it and don't forget to give this repo a star. 
 
 ## Frameworks and Libs
@@ -22,6 +22,12 @@ animated scroll. I made it all in 2 weeks, I hope you like it and don't forget t
 - [Axios](https://github.com/axios/axios)
 - [Windups](https://windups.gwil.co/)
 - [Animated](https://reactnative.dev/docs/animated)
+
+## Prototype
+
+<p align="center">
+  <img src="./assets/prototype.png" />
+</p>
 
 ## Contact
 Israel Rosa - [LinkedIn](https://www.linkedin.com/in/piresr-israel/) - [Instagram](https://www.instagram.com/israelp.rosa/) - piresr.israel@gmail.com
