@@ -23,5 +23,11 @@ animated scroll. I made it all in 2 weeks, I hope you like it and don't forget t
 - [Windups](https://windups.gwil.co/)
 - [Animated](https://reactnative.dev/docs/animated)
 
+## Prototype
+
+<p align="center">
+  <img src="./assets/prototype.png" />
+</p>
+
 ## Contact
 Israel Rosa - [LinkedIn](https://www.linkedin.com/in/piresr-israel/) - [Instagram](https://www.instagram.com/israelp.rosa/) - piresr.israel@gmail.com
