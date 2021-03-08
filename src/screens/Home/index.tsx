@@ -135,7 +135,7 @@ const Home: React.FC = () => {
           <Header disableSearch />
           <ScrollView
             onScroll={(e) => HandleScroll(e)}
-            decelerationRate={0.99}
+            decelerationRate={0.9}
             snapToAlignment="end"
             snapToInterval={screenHeight / 2}
           >
@@ -465,7 +465,7 @@ const Home: React.FC = () => {
                       onPress={() =>
                         navigator.navigate('List', {
                           url: 'vehicles',
-                          title: 'Vehicles',
+                          title: 'vehicles',
                           type: 'vehicle',
                         })
                       }

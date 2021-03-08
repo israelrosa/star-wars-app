@@ -144,7 +144,7 @@ const List: React.FC = () => {
       />
       <ImageBackground
         source={
-          (router.params?.title === 'Characters' &&
+          (router.params?.type === 'characters' &&
             require('../../../assets/images/list/characters.jpg')) ||
           (router.params?.title === 'Planets' &&
             require('../../../assets/images/list/planets.jpg')) ||
@@ -152,7 +152,7 @@ const List: React.FC = () => {
             require('../../../assets/images/list/species.jpg')) ||
           (router.params?.title === 'Films' &&
             require('../../../assets/images/list/films.jpg')) ||
-          (router.params?.title === 'Vehicles' &&
+          (router.params?.title === 'vehicles' &&
             require('../../../assets/images/list/vehicles.jpg')) ||
           (router.params?.title === 'Starships' &&
             require('../../../assets/images/list/starships.jpg'))
